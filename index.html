@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameLoot - Earn While You Play</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loader -->
+    <div id="loader" class="loader d-none">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Authentication Section -->
+    <div id="auth-section" class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">Welcome to GameLoot</h1>
+            
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label for="login-email">Email or Phone</label>
+                    <input type="text" id="login-email" placeholder="Enter your email or phone number">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password">
+                </div>
+                <button id="login-btn" class="btn btn-primary">Login</button>
+                <button id="google-login-btn" class="btn btn-google">
+                    <i class="fab fa-google"></i> Login with Google
+                </button>
+                <div class="auth-links">
+                    <a href="#" id="show-register">Don't have an account? Register</a><br>
+                    <a href="#" id="show-phone-login">Login with Phone OTP</a>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="auth-form d-none">
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="register-phone">Phone Number</label>
+                    <input type="tel" id="register-phone" placeholder="Enter your phone number">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" placeholder="Create a password">
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm-password">Confirm Password</label>
+                    <input type="password" id="register-confirm-password" placeholder="Confirm your password">
+                </div>
+                <div class="form-group">
+                    <label for="referral-code">Referral Code (Optional)</label>
+                    <input type="text" id="referral-code" placeholder="Enter referral code">
+                </div>
+                <button id="register-btn" class="btn btn-primary">Register</button>
+                <div class="auth-links">
+                    <a href="#" id="show-login">Already have an account? Login</a>
+                </div>
+            </div>
+
+            <!-- Phone OTP Form -->
+            <div id="phone-otp-form" class="auth-form d-none">
+                <div class="form-group">
+                    <label for="otp-phone">Phone Number</label>
+                    <input type="tel" id="otp-phone" placeholder="Enter your phone number">
+                </div>
+                <button id="send-otp-btn" class="btn btn-primary">Send OTP</button>
+                
+                <div id="otp-verification" class="d-none">
+                    <div class="form-group">
+                        <label for="otp-code">Enter OTP</label>
+                        <input type="text" id="otp-code" placeholder="Enter 6-digit OTP">
+                    </div>
+                    <button id="verify-otp-btn" class="btn btn-primary">Verify OTP</button>
+                    <button id="resend-otp-btn" class="btn btn-secondary">Resend OTP</button>
+                </div>
+                
+                <div class="auth-links">
+                    <a href="#" id="back-to-login">Back to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Section -->
+    <div id="app-section" class="d-none">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <a href="#" class="logo">GameLoot</a>
+                    <div class="user-info">
+                        <div class="coin-balance">
+                            <i class="fas fa-coins"></i>
+                            <span id="coin-count">0</span> Coins
+                        </div>
+                        <button id="logout-btn" class="logout-btn">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <div class="dashboard">
+                    <!-- Sidebar -->
+                    <aside class="sidebar">
+                        <ul class="sidebar-nav">
+                            <li><a href="#" class="nav-link active" data-section="dashboard">
+                                <i class="fas fa-home"></i> Dashboard
+                            </a></li>
+                            <li><a href="#" class="nav-link" data-section="earning">
+                                <i class="fas fa-coins"></i> Earn Coins
+                            </a></li>
+                            <li><a href="#" class="nav-link" data-section="tournaments">
+                                <i class="fas fa-trophy"></i> Tournaments
+                            </a></li>
+                            <li><a href="#" class="nav-link" data-section="spin">
+                                <i class="fas fa-spinner"></i> Spin & Win
+                            </a></li>
+                            <li><a href="#" class="nav-link" data-section="profile">
+                                <i class="fas fa-user"></i> Profile
+                            </a></li>
+                            <li><a href="#" class="nav-link" data-section="withdraw">
+                                <i class="fas fa-money-bill-wave"></i> Withdraw
+                            </a></li>
+                        </ul>
+                    </aside>
+
+                    <!-- Content Area -->
+                    <div class="content">
+                        <!-- Dashboard Section -->
+                        <section id="dashboard-section" class="content-section">
+                            <h2>Welcome Back!</h2>
+                            <div class="earning-grid">
+                                <div class="earning-card">
+                                    <h3>Today's Earnings</h3>
+                                    <p id="today-earnings">0 Coins</p>
+                                </div>
+                                <div class="earning-card">
+                                    <h3>Total Earnings</h3>
+                                    <p id="total-earnings">0 Coins</p>
+                                </div>
+                                <div class="earning-card">
+                                    <h3>Referrals</h3>
+                                    <p id="referral-count">0 Friends</p>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Quick Actions</h3>
+                                </div>
+                                <div class="earning-grid">
+                                    <div class="earning-card">
+                                        <h3>Daily Login</h3>
+                                        <p>Get your daily reward</p>
+                                        <button id="daily-login-btn" class="btn">Claim Reward</button>
+                                    </div>
+                                    <div class="earning-card">
+                                        <h3>Watch & Earn</h3>
+                                        <p>Watch ads to earn coins</p>
+                                        <button id="watch-earn-btn" class="btn">Watch Now</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Earning Section -->
+                        <section id="earning-section" class="content-section d-none">
+                            <h2>Earn Coins</h2>
+                            <div class="earning-grid">
+                                <div class="earning-card" id="watch-earn-card">
+                                    <div class="card-icon">
+                                        <i class="fas fa-play-circle"></i>
+                                    </div>
+                                    <h3>Watch & Earn</h3>
+                                    <p>Watch rewarded videos and earn 50-100 coins per video</p>
+                                    <button class="btn earning-btn" data-action="watch">Watch Video</button>
+                                </div>
+                                
+                                <div class="earning-card" id="login-earn-card">
+                                    <div class="card-icon">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <h3>Login & Earn</h3>
+                                    <p>Get daily login rewards. Consecutive logins give bonus coins!</p>
+                                    <button class="btn earning-btn" data-action="login">Claim Daily Reward</button>
+                                </div>
+                                
+                                <div class="earning-card" id="play-earn-card">
+                                    <div class="card-icon">
+                                        <i class="fas fa-gamepad"></i>
+                                    </div>
+                                    <h3>Play & Earn</h3>
+                                    <p>Complete game tasks and quizzes to earn coins</p>
+                                    <button class="btn earning-btn" data-action="play">Play Games</button>
+                                </div>
+                                
+                                <div class="earning-card" id="referral-earn-card">
+                                    <div class="card-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <h3>Referral & Earn</h3>
+                                    <p>Invite friends and earn when they complete tasks</p>
+                                    <button class="btn earning-btn" data-action="referral">Share Code</button>
+                                </div>
+                                
+                                <div class="earning-card" id="follow-earn-card">
+                                    <div class="card-icon">
+                                        <i class="fas fa-thumbs-up"></i>
+                                    </div>
+                                    <h3>Follow & Earn</h3>
+                                    <p>Follow our social media pages to earn coins</p>
+                                    <button class="btn earning-btn" data-action="follow">Follow Now</button>
+                                </div>
+                                
+                                <div class="earning-card" id="join-earn-card">
+                                    <div class="card-icon">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <h3>Join & Earn</h3>
+                                    <p>Join events and complete onboarding tasks</p>
+                                    <button class="btn earning-btn" data-action="join">Join Events</button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Tournaments Section -->
+                        <section id="tournaments-section" class="content-section d-none">
+                            <h2>Tournaments</h2>
+                            <div class="tournament-list" id="tournament-list">
+                                <!-- Tournaments will be loaded here -->
+                            </div>
+                        </section>
+
+                        <!-- Spin & Win Section -->
+                        <section id="spin-section" class="content-section d-none">
+                            <h2>Spin & Win</h2>
+                            <div class="spinner-container">
+                                <div class="spinner-wheel" id="spinner-wheel">
+                                    <div class="spinner-pointer"></div>
+                                </div>
+                                <button id="spin-btn" class="spin-btn">Spin Now!</button>
+                                <p id="spin-cooldown" class="mt-2"></p>
+                            </div>
+                        </section>
+
+                        <!-- Profile Section -->
+                        <section id="profile-section" class="content-section d-none">
+                            <h2>Profile</h2>
+                            <div class="profile-grid">
+                                <div class="profile-card">
+                                    <h3>Personal Information</h3>
+                                    <div class="profile-item">
+                                        <label>Player ID:</label>
+                                        <span id="player-id">-</span>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label>Email:</label>
+                                        <span id="profile-email">-</span>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label>Phone:</label>
+                                        <span id="profile-phone">-</span>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label>Join Date:</label>
+                                        <span id="join-date">-</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="profile-card">
+                                    <h3>Earnings & Referrals</h3>
+                                    <div class="profile-item">
+                                        <label>Total Coins:</label>
+                                        <span id="profile-coins">0</span>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label>Referral Code:</label>
+                                        <span id="profile-referral-code">-</span>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label>Referrals Made:</label>
+                                        <span id="profile-referrals">0</span>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label>Total Withdrawn:</label>
+                                        <span id="profile-withdrawn">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Withdraw Section -->
+                        <section id="withdraw-section" class="content-section d-none">
+                            <h2>Withdraw Coins</h2>
+                            <div class="withdrawal-form">
+                                <div class="withdrawal-methods">
+                                    <div class="method-card" data-method="google-play">
+                                        <i class="fab fa-google-play"></i>
+                                        <h4>Google Play</h4>
+                                        <p>Min: 1000 coins</p>
+                                    </div>
+                                    <div class="method-card" data-method="phonepe">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <h4>PhonePe</h4>
+                                        <p>Min: 500 coins</p>
+                                    </div>
+                                    <div class="method-card" data-method="gpay">
+                                        <i class="fab fa-google-pay"></i>
+                                        <h4>Google Pay</h4>
+                                        <p>Min: 500 coins</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="withdraw-amount">Amount (in coins)</label>
+                                    <input type="number" id="withdraw-amount" placeholder="Enter amount to withdraw">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="withdraw-details">Payment Details</label>
+                                    <input type="text" id="withdraw-details" placeholder="Enter UPI ID or account details">
+                                </div>
+                                
+                                <button id="withdraw-btn" class="btn btn-primary">Request Withdrawal</button>
+                                
+                                <div class="card mt-3">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Withdrawal History</h3>
+                                    </div>
+                                    <div id="withdrawal-history">
+                                        <!-- Withdrawal history will be loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="referral-modal" class="modal d-none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Share Your Referral Code</h3>
+                <button class="close-btn" onclick="closeModal('referral-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Share your referral code with friends and earn coins when they join!</p>
+                <div class="form-group">
+                    <label>Your Referral Code:</label>
+                    <input type="text" id="referral-code-display" readonly>
+                </div>
+                <button id="copy-referral-btn" class="btn btn-primary">Copy Code</button>
+                <button id="share-referral-btn" class="btn btn-secondary">Share</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="follow-modal" class="modal d-none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Follow & Earn</h3>
+                <button class="close-btn" onclick="closeModal('follow-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Follow our social media pages to earn coins!</p>
+                <div class="social-links">
+                    <a href="#" class="btn btn-primary" data-platform="youtube">
+                        <i class="fab fa-youtube"></i> Follow on YouTube (50 coins)
+                    </a>
+                    <a href="#" class="btn btn-primary" data-platform="instagram">
+                        <i class="fab fa-instagram"></i> Follow on Instagram (50 coins)
+                    </a>
+                    <a href="#" class="btn btn-primary" data-platform="facebook">
+                        <i class="fab fa-facebook"></i> Follow on Facebook (50 coins)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/dashboard.js"></script>
+    <script type="module" src="js/earning.js"></script>
+    <script type="module" src="js/tournaments.js"></script>
+    <script type="module" src="js/spinner.js"></script>
+    <script type="module" src="js/profile.js"></script>
+    <script type="module" src="js/withdraw.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

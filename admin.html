@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameLoot Admin Panel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loader -->
+    <div id="loader" class="loader d-none">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Admin Authentication -->
+    <div id="admin-auth-section" class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">GameLoot Admin Panel</h1>
+            <div class="form-group">
+                <label for="admin-email">Admin Email</label>
+                <input type="email" id="admin-email" placeholder="Enter admin email">
+            </div>
+            <div class="form-group">
+                <label for="admin-password">Password</label>
+                <input type="password" id="admin-password" placeholder="Enter admin password">
+            </div>
+            <button id="admin-login-btn" class="btn btn-primary">Login as Admin</button>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="d-none">
+        <!-- Admin Header -->
+        <header class="admin-header">
+            <div class="container">
+                <div class="header-content">
+                    <h1>GameLoot Admin Panel</h1>
+                    <button id="admin-logout-btn" class="logout-btn">Logout</button>
+                </div>
+                <nav class="admin-nav">
+                    <a href="#" class="admin-nav-link active" data-section="overview">Overview</a>
+                    <a href="#" class="admin-nav-link" data-section="users">Users</a>
+                    <a href="#" class="admin-nav-link" data-section="withdrawals">Withdrawals</a>
+                    <a href="#" class="admin-nav-link" data-section="tournaments">Tournaments</a>
+                    <a href="#" class="admin-nav-link" data-section="tasks">Tasks</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Admin Content -->
+        <main class="admin-content">
+            <div class="container">
+                <!-- Overview Section -->
+                <section id="overview-section" class="admin-section">
+                    <h2>Dashboard Overview</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 id="total-users">0</h3>
+                            <p>Total Users</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="total-coins-distributed">0</h3>
+                            <p>Total Coins Distributed</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="pending-withdrawals">0</h3>
+                            <p>Pending Withdrawals</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="active-tournaments">0</h3>
+                            <p>Active Tournaments</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Activity</h3>
+                        </div>
+                        <div id="recent-activity">
+                            <!-- Recent activity will be loaded here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Users Section -->
+                <section id="users-section" class="admin-section d-none">
+                    <div class="card-header">
+                        <h2>User Management</h2>
+                        <div class="search-controls">
+                            <input type="text" id="user-search" placeholder="Search users...">
+                            <select id="user-filter">
+                                <option value="">All Users</option>
+                                <option value="active">Active</option>
+                                <option value="high-earners">High Earners</option>
+                                <option value="recent">Recent</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Coins</th>
+                                    <th>Total Earned</th>
+                                    <th>Referrals</th>
+                                    <th>Join Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <!-- Users will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Withdrawals Section -->
+                <section id="withdrawals-section" class="admin-section d-none">
+                    <div class="card-header">
+                        <h2>Withdrawal Management</h2>
+                        <div class="filter-controls">
+                            <select id="withdrawal-filter">
+                                <option value="">All Requests</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Request ID</th>
+                                    <th>User</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Payment Details</th>
+                                    <th>Request Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="withdrawals-table-body">
+                                <!-- Withdrawals will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Tournaments Section -->
+                <section id="tournaments-section" class="admin-section d-none">
+                    <div class="card-header">
+                        <h2>Tournament Management</h2>
+                        <button id="create-tournament-btn" class="btn btn-primary">Create Tournament</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Tournament Name</th>
+                                    <th>Game</th>
+                                    <th>Entry Fee</th>
+                                    <th>Prize Pool</th>
+                                    <th>Participants</th>
+                                    <th>Start Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tournaments-table-body">
+                                <!-- Tournaments will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Tasks Section -->
+                <section id="tasks-section" class="admin-section d-none">
+                    <div class="card-header">
+                        <h2>Task Management</h2>
+                        <button id="create-task-btn" class="btn btn-primary">Create Task</button>
+                    </div>
+                    
+                    <div class="earning-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Daily Login Rewards</h3>
+                            </div>
+                            <div class="form-group">
+                                <label>Base Reward (coins)</label>
+                                <input type="number" id="daily-base-reward" value="50">
+                            </div>
+                            <div class="form-group">
+                                <label>Streak Multiplier</label>
+                                <input type="number" id="daily-streak-multiplier" value="1.5" step="0.1">
+                            </div>
+                            <button id="update-daily-rewards" class="btn btn-primary">Update</button>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Watch & Earn</h3>
+                            </div>
+                            <div class="form-group">
+                                <label>Min Coins per Video</label>
+                                <input type="number" id="watch-min-coins" value="50">
+                            </div>
+                            <div class="form-group">
+                                <label>Max Coins per Video</label>
+                                <input type="number" id="watch-max-coins" value="100">
+                            </div>
+                            <div class="form-group">
+                                <label>Cooldown (minutes)</label>
+                                <input type="number" id="watch-cooldown" value="5">
+                            </div>
+                            <button id="update-watch-rewards" class="btn btn-primary">Update</button>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Spin Wheel</h3>
+                            </div>
+                            <div class="form-group">
+                                <label>Spin Rewards (comma-separated)</label>
+                                <input type="text" id="spin-rewards" value="10,25,50,75,100,150,200,500">
+                            </div>
+                            <div class="form-group">
+                                <label>Cooldown (hours)</label>
+                                <input type="number" id="spin-cooldown" value="24">
+                            </div>
+                            <button id="update-spin-rewards" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="user-edit-modal" class="modal d-none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit User</h3>
+                <button class="close-btn" onclick="closeModal('user-edit-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="edit-user-email" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Coins</label>
+                    <input type="number" id="edit-user-coins">
+                </div>
+                <div class="form-group">
+                    <label>Total Earned</label>
+                    <input type="number" id="edit-user-earned">
+                </div>
+                <div class="form-group">
+                    <label>Action</label>
+                    <select id="user-action">
+                        <option value="update">Update Info</option>
+                        <option value="add-coins">Add Coins</option>
+                        <option value="deduct-coins">Deduct Coins</option>
+                        <option value="reset-tasks">Reset Tasks</option>
+                    </select>
+                </div>
+                <button id="save-user-changes" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="withdrawal-action-modal" class="modal d-none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Process Withdrawal</h3>
+                <button class="close-btn" onclick="closeModal('withdrawal-action-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>User Email</label>
+                    <input type="text" id="withdrawal-user-email" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="text" id="withdrawal-amount" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Method</label>
+                    <input type="text" id="withdrawal-method" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Payment Details</label>
+                    <input type="text" id="withdrawal-details" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Action</label>
+                    <select id="withdrawal-action">
+                        <option value="approve">Approve</option>
+                        <option value="reject">Reject</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="withdrawal-notes" placeholder="Add notes..."></textarea>
+                </div>
+                <button id="process-withdrawal" class="btn btn-primary">Process</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tournament-modal" class="modal d-none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create Tournament</h3>
+                <button class="close-btn" onclick="closeModal('tournament-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Tournament Name</label>
+                    <input type="text" id="tournament-name" placeholder="Enter tournament name">
+                </div>
+                <div class="form-group">
+                    <label>Game</label>
+                    <select id="tournament-game">
+                        <option value="Free Fire">Free Fire</option>
+                        <option value="BGMI">BGMI</option>
+                        <option value="COD Mobile">COD Mobile</option>
+                        <option value="Clash Royale">Clash Royale</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Entry Fee (coins)</label>
+                    <input type="number" id="tournament-entry-fee" value="100">
+                </div>
+                <div class="form-group">
+                    <label>Prize Pool (coins)</label>
+                    <input type="number" id="tournament-prize-pool" value="5000">
+                </div>
+                <div class="form-group">
+                    <label>Max Participants</label>
+                    <input type="number" id="tournament-max-participants" value="50">
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="datetime-local" id="tournament-start-date">
+                </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <input type="datetime-local" id="tournament-end-date">
+                </div>
+                <div class="form-group">
+                    <label>Rules</label>
+                    <textarea id="tournament-rules" placeholder="Enter tournament rules..."></textarea>
+                </div>
+                <button id="create-tournament" class="btn btn-primary">Create Tournament</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>
