@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameLoot - Earn While You Play</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#8b5cf6',
+                        accent: '#06b6d4',
+                        dark: '#1f2937',
+                        light: '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen">
+    <!-- Loading Screen -->
+    <div id="loading" class="fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center z-50">
+        <div class="text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto mb-4"></div>
+            <h2 class="text-2xl font-bold text-white mb-2">GameLoot</h2>
+            <p class="text-gray-300">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="hidden fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 max-w-md w-full mx-4 border border-white/20">
+            <div class="text-center mb-8">
+                <div class="bg-gradient-to-r from-primary to-secondary w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-gamepad text-white text-2xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-white mb-2">GameLoot</h1>
+                <p class="text-gray-300">Earn while you play your favorite games</p>
+            </div>
+            
+            <button id="googleSignIn" class="w-full bg-white hover:bg-gray-50 text-gray-800 font-semibold py-3 px-4 rounded-lg flex items-center justify-center space-x-3 transition-colors">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                <span>Continue with Google</span>
+            </button>
+            
+            <p class="text-xs text-gray-400 text-center mt-4">
+                By continuing, you agree to our Terms of Service and Privacy Policy
+            </p>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="hidden">
+        <!-- Sidebar -->
+        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-black/20 backdrop-blur-lg border-r border-white/10 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out" id="sidebar">
+            <div class="flex items-center justify-center h-16 border-b border-white/10">
+                <div class="bg-gradient-to-r from-primary to-secondary w-10 h-10 rounded-full flex items-center justify-center">
+                    <i class="fas fa-gamepad text-white"></i>
+                </div>
+                <span class="ml-2 text-xl font-bold text-white">GameLoot</span>
+            </div>
+            
+            <div class="p-4">
+                <!-- User Profile -->
+                <div class="bg-white/10 rounded-lg p-4 mb-6">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <img id="userAvatar" class="w-12 h-12 rounded-full" alt="User Avatar">
+                        <div>
+                            <h3 id="userName" class="text-white font-semibold text-sm"></h3>
+                            <p id="userEmail" class="text-gray-300 text-xs"></p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">Player ID:</span>
+                            <span id="playerId" class="text-white font-mono"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">Referral ID:</span>
+                            <span id="referralId" class="text-primary font-mono"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">Coins:</span>
+                            <span id="userCoins" class="text-yellow-400 font-semibold">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="space-y-2">
+                    <a href="#" class="nav-item active flex items-center space-x-3 px-4 py-3 rounded-lg text-white bg-primary/20 border border-primary/30">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="#" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors">
+                        <i class="fas fa-trophy"></i>
+                        <span>Tournaments</span>
+                    </a>
+                    <a href="#" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors">
+                        <i class="fas fa-users"></i>
+                        <span>Referrals</span>
+                    </a>
+                    <a href="#" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors">
+                        <i class="fas fa-wallet"></i>
+                        <span>Withdraw</span>
+                    </a>
+                    <a href="#" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors">
+                        <i class="fas fa-comments"></i>
+                        <span>Group Chat</span>
+                    </a>
+                </nav>
+
+                <!-- Logout Button -->
+                <button id="logoutBtn" class="w-full mt-8 bg-red-500/20 hover:bg-red-500/30 text-red-400 font-semibold py-3 px-4 rounded-lg flex items-center justify-center space-x-2 transition-colors border border-red-500/30">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="lg:ml-64">
+            <!-- Header -->
+            <header class="bg-black/20 backdrop-blur-lg border-b border-white/10 px-4 py-4">
+                <div class="flex items-center justify-between">
+                    <button class="lg:hidden text-white" id="menuToggle">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-2xl font-bold text-white">Dashboard</h1>
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-yellow-500/20 px-3 py-1 rounded-full border border-yellow-500/30">
+                            <span class="text-yellow-400 font-semibold text-sm">
+                                <i class="fas fa-coins mr-1"></i>
+                                <span id="headerCoins">0</span> Coins
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="p-6">
+                <!-- Home Page -->
+                <div id="homePage" class="page-content">
+                    <!-- Welcome Section -->
+                    <div class="bg-gradient-to-r from-primary to-secondary rounded-2xl p-6 mb-6 text-white">
+                        <h2 class="text-2xl font-bold mb-2">Welcome back, <span id="welcomeName"></span>!</h2>
+                        <p class="opacity-90">Ready to earn some coins? Choose your favorite activity below.</p>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-300 text-sm">Total Earnings</p>
+                                    <p class="text-2xl font-bold text-white"><span id="totalEarnings">0</span> Coins</p>
+                                </div>
+                                <div class="bg-yellow-500/20 p-3 rounded-full">
+                                    <i class="fas fa-coins text-yellow-400 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-300 text-sm">Referrals</p>
+                                    <p class="text-2xl font-bold text-white"><span id="totalReferrals">0</span></p>
+                                </div>
+                                <div class="bg-green-500/20 p-3 rounded-full">
+                                    <i class="fas fa-users text-green-400 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-300 text-sm">Tournaments Won</p>
+                                    <p class="text-2xl font-bold text-white"><span id="tournamentsWon">0</span></p>
+                                </div>
+                                <div class="bg-purple-500/20 p-3 rounded-full">
+                                    <i class="fas fa-trophy text-purple-400 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Features -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Watch & Earn -->
+                        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 hover:border-primary/50 transition-colors cursor-pointer group">
+                            <div class="bg-gradient-to-r from-red-500 to-pink-500 w-12 h-12 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-play text-white text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Watch & Earn</h3>
+                            <p class="text-gray-300 text-sm mb-4">Watch videos and earn coins instantly</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-yellow-400 font-semibold">+10 Coins/Video</span>
+                                <i class="fas fa-arrow-right text-gray-400 group-hover:text-white transition-colors"></i>
+                            </div>
+                        </div>
+
+                        <!-- Play Tournament -->
+                        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 hover:border-primary/50 transition-colors cursor-pointer group">
+                            <div class="bg-gradient-to-r from-blue-500 to-cyan-500 w-12 h-12 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-trophy text-white text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Play Tournament</h3>
+                            <p class="text-gray-300 text-sm mb-4">Join tournaments and win big prizes</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-yellow-400 font-semibold">Win up to 1000 Coins</span>
+                                <i class="fas fa-arrow-right text-gray-400 group-hover:text-white transition-colors"></i>
+                            </div>
+                        </div>
+
+                        <!-- Make Tournament -->
+                        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 hover:border-primary/50 transition-colors cursor-pointer group">
+                            <div class="bg-gradient-to-r from-green-500 to-emerald-500 w-12 h-12 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-plus text-white text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Make Tournament</h3>
+                            <p class="text-gray-300 text-sm mb-4">Create Free Fire / BGMI tournaments</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-yellow-400 font-semibold">Free to Create</span>
+                                <i class="fas fa-arrow-right text-gray-400 group-hover:text-white transition-colors"></i>
+                            </div>
+                        </div>
+
+                        <!-- Refer & Earn -->
+                        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 hover:border-primary/50 transition-colors cursor-pointer group">
+                            <div class="bg-gradient-to-r from-purple-500 to-indigo-500 w-12 h-12 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-share-alt text-white text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Refer & Earn</h3>
+                            <p class="text-gray-300 text-sm mb-4">Invite friends and earn rewards</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-yellow-400 font-semibold">+50 Coins/Referral</span>
+                                <i class="fas fa-arrow-right text-gray-400 group-hover:text-white transition-colors"></i>
+                            </div>
+                        </div>
+
+                        <!-- Group Chat -->
+                        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 hover:border-primary/50 transition-colors cursor-pointer group">
+                            <div class="bg-gradient-to-r from-orange-500 to-red-500 w-12 h-12 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-comments text-white text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Group Chat</h3>
+                            <p class="text-gray-300 text-sm mb-4">Connect with other players</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-green-400 font-semibold">Online Now</span>
+                                <i class="fas fa-arrow-right text-gray-400 group-hover:text-white transition-colors"></i>
+                            </div>
+                        </div>
+
+                        <!-- Withdraw Coins -->
+                        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 hover:border-primary/50 transition-colors cursor-pointer group">
+                            <div class="bg-gradient-to-r from-yellow-500 to-orange-500 w-12 h-12 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-wallet text-white text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Withdraw Coins</h3>
+                            <p class="text-gray-300 text-sm mb-4">Convert coins to real money</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-green-400 font-semibold">Min 100 Coins</span>
+                                <i class="fas fa-arrow-right text-gray-400 group-hover:text-white transition-colors"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Withdraw Page -->
+                <div id="withdrawPage" class="page-content hidden">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
+                            <h2 class="text-2xl font-bold text-white mb-6">Withdraw Coins</h2>
+                            
+                            <div class="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4 mb-6">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-coins text-yellow-400 text-xl"></i>
+                                    <div>
+                                        <p class="text-yellow-400 font-semibold">Available Coins</p>
+                                        <p class="text-white text-2xl font-bold"><span id="availableCoins">0</span> Coins</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form id="withdrawForm" class="space-y-6">
+                                <div>
+                                    <label class="block text-gray-300 text-sm font-medium mb-2">Amount (Coins)</label>
+                                    <input type="number" id="withdrawAmount" min="100" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary" placeholder="Enter amount (Min: 100)">
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-300 text-sm font-medium mb-2">Withdrawal Method</label>
+                                    <select id="withdrawMethod" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary">
+                                        <option value="">Select method</option>
+                                        <option value="gpay">Google Pay</option>
+                                        <option value="phonepe">PhonePe</option>
+                                        <option value="playstore">Play Store Redeem</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-300 text-sm font-medium mb-2">
+                                        <span id="withdrawInputLabel">UPI ID / Email</span>
+                                    </label>
+                                    <input type="text" id="withdrawDetails" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary" placeholder="Enter UPI ID or Email">
+                                </div>
+
+                                <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                                    Submit Withdrawal Request
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referral Page -->
+                <div id="referralPage" class="page-content hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 mb-6">
+                            <h2 class="text-2xl font-bold text-white mb-6">Refer & Earn</h2>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div class="bg-gradient-to-r from-purple-500/20 to-indigo-500/20 rounded-lg p-6 border border-purple-500/30">
+                                    <h3 class="text-lg font-semibold text-white mb-2">Your Referral Code</h3>
+                                    <div class="flex items-center space-x-3">
+                                        <code id="referralCode" class="bg-black/30 px-3 py-2 rounded text-primary font-mono text-lg"></code>
+                                        <button id="copyReferralCode" class="bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded transition-colors">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg p-6 border border-green-500/30">
+                                    <h3 class="text-lg font-semibold text-white mb-2">Referral Earnings</h3>
+                                    <p class="text-3xl font-bold text-green-400"><span id="referralEarnings">0</span> Coins</p>
+                                    <p class="text-gray-300 text-sm">From <span id="referralCount">0</span> referrals</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-black/20 rounded-lg p-6 mb-6">
+                                <h3 class="text-lg font-semibold text-white mb-4">Share Your Referral Link</h3>
+                                <div class="flex items-center space-x-3">
+                                    <input type="text" id="referralLink" class="flex-1 bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white" readonly>
+                                    <button id="copyReferralLink" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg transition-colors">
+                                        Copy Link
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <button class="bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 font-semibold py-3 px-4 rounded-lg transition-colors">
+                                    <i class="fab fa-telegram mr-2"></i>
+                                    Share on Telegram
+                                </button>
+                                <button class="bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-400 font-semibold py-3 px-4 rounded-lg transition-colors">
+                                    <i class="fab fa-whatsapp mr-2"></i>
+                                    Share on WhatsApp
+                                </button>
+                                <button class="bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 text-purple-400 font-semibold py-3 px-4 rounded-lg transition-colors">
+                                    <i class="fas fa-share mr-2"></i>
+                                    More Options
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Referral History -->
+                        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
+                            <h3 class="text-xl font-bold text-white mb-6">Referral History</h3>
+                            <div id="referralHistory" class="space-y-4">
+                                <div class="text-center text-gray-400 py-8">
+                                    <i class="fas fa-users text-4xl mb-4"></i>
+                                    <p>No referrals yet. Start sharing your code!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenuOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
+
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
