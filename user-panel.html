@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Panel - Tournament Hub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/user-panel.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="user-panel-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-gamepad"></i>
+                    <h2>Tournament Hub</h2>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <h3 id="userName">Loading...</h3>
+                        <p id="userEmail">Loading...</p>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#dashboard" class="nav-link active" data-section="dashboard">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a></li>
+                    <li><a href="#tournaments" class="nav-link" data-section="tournaments">
+                        <i class="fas fa-trophy"></i> Tournaments
+                    </a></li>
+                    <li><a href="#my-tournaments" class="nav-link" data-section="my-tournaments">
+                        <i class="fas fa-list"></i> My Tournaments
+                    </a></li>
+                    <li><a href="#profile" class="nav-link" data-section="profile">
+                        <i class="fas fa-user-cog"></i> Profile
+                    </a></li>
+                    <li><a href="#leaderboard" class="nav-link" data-section="leaderboard">
+                        <i class="fas fa-medal"></i> Leaderboard
+                    </a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn btn-outline" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+                <a href="index.html" class="btn btn-outline">
+                    <i class="fas fa-home"></i> Home
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1 id="pageTitle">Dashboard</h1>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search tournaments..." id="searchInput">
+                    </div>
+                    <button class="btn btn-primary" onclick="showJoinTournamentModal()">
+                        <i class="fas fa-plus"></i> Join Tournament
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-trophy"></i>
+                        <div class="stat-info">
+                            <h3 id="totalTournaments">0</h3>
+                            <p>Tournaments Joined</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-medal"></i>
+                        <div class="stat-info">
+                            <h3 id="totalWins">0</h3>
+                            <p>Wins</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-star"></i>
+                        <div class="stat-info">
+                            <h3 id="totalPoints">0</h3>
+                            <p>Points</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-chart-line"></i>
+                        <div class="stat-info">
+                            <h3 id="winRate">0%</h3>
+                            <p>Win Rate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-content">
+                    <div class="recent-tournaments">
+                        <h2>Recent Tournaments</h2>
+                        <div class="tournament-list" id="recentTournaments">
+                            <!-- Recent tournaments will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="upcoming-tournaments">
+                        <h2>Upcoming Tournaments</h2>
+                        <div class="tournament-list" id="upcomingTournaments">
+                            <!-- Upcoming tournaments will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tournaments Section -->
+            <section id="tournaments" class="content-section">
+                <div class="tournaments-header">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-game="all">All Games</button>
+                        <button class="filter-tab" data-game="freefire">Free Fire</button>
+                        <button class="filter-tab" data-game="bgmi">BGMI</button>
+                    </div>
+                    <div class="filter-options">
+                        <select id="statusFilter">
+                            <option value="all">All Status</option>
+                            <option value="open">Open</option>
+                            <option value="ongoing">Ongoing</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="tournaments-grid" id="allTournaments">
+                    <!-- All tournaments will be loaded here -->
+                </div>
+            </section>
+
+            <!-- My Tournaments Section -->
+            <section id="my-tournaments" class="content-section">
+                <div class="my-tournaments-tabs">
+                    <button class="tab-btn active" data-tab="joined">Joined</button>
+                    <button class="tab-btn" data-tab="completed">Completed</button>
+                    <button class="tab-btn" data-tab="won">Won</button>
+                </div>
+                <div class="my-tournaments-content" id="myTournamentsContent">
+                    <!-- User's tournaments will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section id="profile" class="content-section">
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                            <button class="change-avatar-btn">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                        <div class="profile-info">
+                            <h2 id="profileName">Loading...</h2>
+                            <p id="profileEmail">Loading...</p>
+                        </div>
+                    </div>
+                    <form class="profile-form" id="profileForm">
+                        <div class="form-group">
+                            <label for="displayName">Display Name</label>
+                            <input type="text" id="displayName" name="displayName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gameId">Game ID (Free Fire)</label>
+                            <input type="text" id="gameId" name="gameId" placeholder="Enter your Free Fire ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="bgmiId">BGMI ID</label>
+                            <input type="text" id="bgmiId" name="bgmiId" placeholder="Enter your BGMI ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+                        </div>
+                        <div class="form-group">
+                            <label for="country">Country</label>
+                            <select id="country" name="country">
+                                <option value="">Select Country</option>
+                                <option value="IN">India</option>
+                                <option value="US">United States</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="CA">Canada</option>
+                                <option value="AU">Australia</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Leaderboard Section -->
+            <section id="leaderboard" class="content-section">
+                <div class="leaderboard-header">
+                    <h2>Global Leaderboard</h2>
+                    <div class="leaderboard-filters">
+                        <select id="leaderboardGame">
+                            <option value="all">All Games</option>
+                            <option value="freefire">Free Fire</option>
+                            <option value="bgmi">BGMI</option>
+                        </select>
+                        <select id="leaderboardPeriod">
+                            <option value="all">All Time</option>
+                            <option value="monthly">This Month</option>
+                            <option value="weekly">This Week</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="leaderboard-table" id="leaderboardTable">
+                    <!-- Leaderboard will be loaded here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Join Tournament Modal -->
+    <div id="joinTournamentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Join Tournament</h2>
+                <button class="close-btn" onclick="closeModal('joinTournamentModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="joinTournamentForm">
+                    <div class="form-group">
+                        <label for="tournamentCode">Tournament Code</label>
+                        <input type="text" id="tournamentCode" name="tournamentCode" placeholder="Enter tournament code" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="teamName">Team Name</label>
+                        <input type="text" id="teamName" name="teamName" placeholder="Enter your team name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gameIdModal">Game ID</label>
+                        <input type="text" id="gameIdModal" name="gameIdModal" placeholder="Enter your game ID" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Join Tournament</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="authTitle">Login</h2>
+                <button class="close-btn" onclick="closeModal('authModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="authForm">
+                    <div class="form-group">
+                        <label for="authEmail">Email</label>
+                        <input type="email" id="authEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="authPassword">Password</label>
+                        <input type="password" id="authPassword" name="password" required>
+                    </div>
+                    <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="authSubmitBtn">Login</button>
+                </form>
+                <div class="auth-switch">
+                    <p id="authSwitchText">Don't have an account? <a href="#" onclick="switchAuthMode()">Sign up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/user-panel.js"></script>
+</body>
+</html>

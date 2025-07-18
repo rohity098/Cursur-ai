@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Tournament Hub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="landing-container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+                <h1>Tournament Hub</h1>
+            </div>
+            <nav class="nav">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#tournaments" class="nav-link">Tournaments</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <section class="hero">
+                <div class="hero-content">
+                    <h2>Join Epic Gaming Tournaments</h2>
+                    <p>Compete in Free Fire and BGMI tournaments with players worldwide</p>
+                    <div class="cta-buttons">
+                        <a href="user-panel.html" class="btn btn-primary">
+                            <i class="fas fa-user"></i>
+                            Join as Player
+                        </a>
+                        <a href="admin-panel.html" class="btn btn-secondary">
+                            <i class="fas fa-crown"></i>
+                            Admin Panel
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="game-cards">
+                        <div class="game-card">
+                            <i class="fas fa-fire"></i>
+                            <h3>Free Fire</h3>
+                        </div>
+                        <div class="game-card">
+                            <i class="fas fa-crosshairs"></i>
+                            <h3>BGMI</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="features" class="features">
+                <h2>Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-trophy"></i>
+                        <h3>Competitive Tournaments</h3>
+                        <p>Join daily tournaments with exciting prizes</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-users"></i>
+                        <h3>Team Management</h3>
+                        <p>Create and manage your gaming teams</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Live Statistics</h3>
+                        <p>Track your performance and rankings</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Secure Platform</h3>
+                        <p>Safe and fair gaming environment</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tournaments" class="tournaments-preview">
+                <h2>Active Tournaments</h2>
+                <div class="tournament-grid" id="activeTournaments">
+                    <!-- Tournaments will be loaded dynamically -->
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Tournament Hub</h3>
+                    <p>The ultimate destination for gaming tournaments</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="user-panel.html">Player Panel</a></li>
+                        <li><a href="admin-panel.html">Admin Panel</a></li>
+                        <li><a href="#features">Features</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p>Email: info@tournamenthub.com</p>
+                    <p>Phone: +1 (555) 123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Tournament Hub. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

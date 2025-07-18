@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Tournament Hub</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/admin-panel.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-panel-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-crown"></i>
+                    <h2>Admin Panel</h2>
+                </div>
+                <div class="admin-info">
+                    <div class="admin-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="admin-details">
+                        <h3 id="adminName">Loading...</h3>
+                        <p>Administrator</p>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#dashboard" class="nav-link active" data-section="dashboard">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </a></li>
+                    <li><a href="#tournaments" class="nav-link" data-section="tournaments">
+                        <i class="fas fa-trophy"></i> Tournaments
+                    </a></li>
+                    <li><a href="#users" class="nav-link" data-section="users">
+                        <i class="fas fa-users"></i> Users
+                    </a></li>
+                    <li><a href="#analytics" class="nav-link" data-section="analytics">
+                        <i class="fas fa-chart-line"></i> Analytics
+                    </a></li>
+                    <li><a href="#settings" class="nav-link" data-section="settings">
+                        <i class="fas fa-cog"></i> Settings
+                    </a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn btn-outline" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+                <a href="index.html" class="btn btn-outline">
+                    <i class="fas fa-home"></i> Home
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1 id="pageTitle">Dashboard</h1>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search..." id="searchInput">
+                    </div>
+                    <button class="btn btn-primary" onclick="showCreateTournamentModal()">
+                        <i class="fas fa-plus"></i> Create Tournament
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-trophy"></i>
+                        <div class="stat-info">
+                            <h3 id="totalTournaments">0</h3>
+                            <p>Total Tournaments</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div class="stat-info">
+                            <h3 id="totalUsers">0</h3>
+                            <p>Total Users</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-play"></i>
+                        <div class="stat-info">
+                            <h3 id="activeTournaments">0</h3>
+                            <p>Active Tournaments</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-dollar-sign"></i>
+                        <div class="stat-info">
+                            <h3 id="totalRevenue">$0</h3>
+                            <p>Total Revenue</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-content">
+                    <div class="recent-activity">
+                        <h2>Recent Activity</h2>
+                        <div class="activity-list" id="recentActivity">
+                            <!-- Recent activity will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="quick-stats">
+                        <h2>Quick Stats</h2>
+                        <div class="chart-container">
+                            <canvas id="statsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tournaments Section -->
+            <section id="tournaments" class="content-section">
+                <div class="tournaments-header">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-status="all">All</button>
+                        <button class="filter-tab" data-status="open">Open</button>
+                        <button class="filter-tab" data-status="ongoing">Ongoing</button>
+                        <button class="filter-tab" data-status="completed">Completed</button>
+                    </div>
+                    <div class="filter-options">
+                        <select id="gameFilter">
+                            <option value="all">All Games</option>
+                            <option value="freefire">Free Fire</option>
+                            <option value="bgmi">BGMI</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="tournaments-table" id="tournamentsTable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tournament</th>
+                                <th>Game</th>
+                                <th>Status</th>
+                                <th>Participants</th>
+                                <th>Prize Pool</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tournamentsTableBody">
+                            <!-- Tournament data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="users" class="content-section">
+                <div class="users-header">
+                    <div class="user-stats">
+                        <div class="user-stat">
+                            <h3 id="activeUsers">0</h3>
+                            <p>Active Users</p>
+                        </div>
+                        <div class="user-stat">
+                            <h3 id="newUsers">0</h3>
+                            <p>New This Month</p>
+                        </div>
+                        <div class="user-stat">
+                            <h3 id="bannedUsers">0</h3>
+                            <p>Banned Users</p>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn btn-secondary" onclick="exportUsers()">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+                <div class="users-table" id="usersTable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Tournaments</th>
+                                <th>Wins</th>
+                                <th>Status</th>
+                                <th>Join Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- User data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics" class="content-section">
+                <div class="analytics-header">
+                    <h2>Analytics Overview</h2>
+                    <div class="date-range">
+                        <select id="analyticsRange">
+                            <option value="7">Last 7 days</option>
+                            <option value="30">Last 30 days</option>
+                            <option value="90">Last 3 months</option>
+                            <option value="365">Last year</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Tournament Growth</h3>
+                        <canvas id="tournamentGrowthChart"></canvas>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>User Engagement</h3>
+                        <canvas id="userEngagementChart"></canvas>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Game Popularity</h3>
+                        <canvas id="gamePopularityChart"></canvas>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Revenue Trends</h3>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <div class="settings-container">
+                    <div class="settings-section">
+                        <h2>Platform Settings</h2>
+                        <form id="platformSettings">
+                            <div class="form-group">
+                                <label for="platformName">Platform Name</label>
+                                <input type="text" id="platformName" name="platformName" value="Tournament Hub">
+                            </div>
+                            <div class="form-group">
+                                <label for="maxParticipants">Max Participants per Tournament</label>
+                                <input type="number" id="maxParticipants" name="maxParticipants" value="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="registrationFee">Default Registration Fee</label>
+                                <input type="number" id="registrationFee" name="registrationFee" value="10">
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="allowFreeRegistration" name="allowFreeRegistration" checked>
+                                    Allow Free Registration
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Settings</button>
+                        </form>
+                    </div>
+                    <div class="settings-section">
+                        <h2>Game Settings</h2>
+                        <div class="game-settings">
+                            <div class="game-setting">
+                                <h3>Free Fire</h3>
+                                <label>
+                                    <input type="checkbox" id="freeFireEnabled" checked>
+                                    Enable Free Fire Tournaments
+                                </label>
+                            </div>
+                            <div class="game-setting">
+                                <h3>BGMI</h3>
+                                <label>
+                                    <input type="checkbox" id="bgmiEnabled" checked>
+                                    Enable BGMI Tournaments
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Create Tournament Modal -->
+    <div id="createTournamentModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Create New Tournament</h2>
+                <button class="close-btn" onclick="closeModal('createTournamentModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createTournamentForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tournamentName">Tournament Name</label>
+                            <input type="text" id="tournamentName" name="tournamentName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gameType">Game Type</label>
+                            <select id="gameType" name="gameType" required>
+                                <option value="">Select Game</option>
+                                <option value="freefire">Free Fire</option>
+                                <option value="bgmi">BGMI</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="maxParticipantsModal">Max Participants</label>
+                            <input type="number" id="maxParticipantsModal" name="maxParticipants" min="4" max="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="entryFee">Entry Fee ($)</label>
+                            <input type="number" id="entryFee" name="entryFee" min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="startDate">Start Date</label>
+                            <input type="datetime-local" id="startDate" name="startDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date</label>
+                            <input type="datetime-local" id="endDate" name="endDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="3" placeholder="Tournament description..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="rules">Rules</label>
+                        <textarea id="rules" name="rules" rows="4" placeholder="Tournament rules..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstPrize">1st Prize ($)</label>
+                            <input type="number" id="firstPrize" name="firstPrize" min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="secondPrize">2nd Prize ($)</label>
+                            <input type="number" id="secondPrize" name="secondPrize" min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="thirdPrize">3rd Prize ($)</label>
+                            <input type="number" id="thirdPrize" name="thirdPrize" min="0" step="0.01">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Tournament</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Tournament Modal -->
+    <div id="editTournamentModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Edit Tournament</h2>
+                <button class="close-btn" onclick="closeModal('editTournamentModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editTournamentForm">
+                    <!-- Same form fields as create tournament -->
+                    <input type="hidden" id="editTournamentId" name="tournamentId">
+                    <!-- Form fields will be populated dynamically -->
+                    <div id="editTournamentFields"></div>
+                    <button type="submit" class="btn btn-primary">Update Tournament</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Authentication Modal -->
+    <div id="adminAuthModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Admin Login</h2>
+                <button class="close-btn" onclick="closeModal('adminAuthModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="adminAuthForm">
+                    <div class="form-group">
+                        <label for="adminEmail">Admin Email</label>
+                        <input type="email" id="adminEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Password</label>
+                        <input type="password" id="adminPassword" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminKey">Admin Key</label>
+                        <input type="password" id="adminKey" name="adminKey" placeholder="Enter admin access key" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login as Admin</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/admin-panel.js"></script>
+</body>
+</html>
