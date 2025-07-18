@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameLoot - Earn & Win</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .login-form {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn-google {
+            background: #db4437;
+            color: white;
+        }
+
+        .btn-google:hover {
+            background: #c23321;
+        }
+
+        .btn-phone {
+            background: #25d366;
+            color: white;
+        }
+
+        .btn-phone:hover {
+            background: #20ba5a;
+        }
+
+        .divider {
+            margin: 20px 0;
+            text-align: center;
+            color: #666;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .welcome-text {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .balance-amount {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .balance-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .earning-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .earning-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .earning-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .earning-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .earning-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .earning-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .earning-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .referral-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .referral-code {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-family: monospace;
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .referral-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .referral-input input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .referral-input button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .spin-wheel {
+            width: 200px;
+            height: 200px;
+            border: 10px solid #667eea;
+            border-radius: 50%;
+            margin: 20px auto;
+            position: relative;
+            background: conic-gradient(
+                #ff6b6b 0deg 60deg,
+                #4ecdc4 60deg 120deg,
+                #45b7d1 120deg 180deg,
+                #96ceb4 180deg 240deg,
+                #ffeaa7 240deg 300deg,
+                #dda0dd 300deg 360deg
+            );
+        }
+
+        .spin-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 20px solid #333;
+        }
+
+        .spin-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .spin-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .cooldown-timer {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .profile-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .profile-item:last-child {
+            border-bottom: none;
+        }
+
+        .profile-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .profile-value {
+            color: #333;
+        }
+
+        .withdraw-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .withdraw-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tournament-list {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .tournament-item {
+            padding: 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .tournament-item:hover {
+            border-color: #667eea;
+        }
+
+        .tournament-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .tournament-details {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .instagram-btn {
+            background: #e4405f;
+            color: white;
+        }
+
+        .youtube-btn {
+            background: #ff0000;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Page -->
+        <div id="loginPage" class="login-container">
+            <div class="logo">🎮 GameLoot</div>
+            <div class="tagline">Earn coins by playing games!</div>
+            
+            <!-- Email/Password Login -->
+            <div id="emailLoginForm" class="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+                <button id="loginBtn" class="btn btn-primary">Login</button>
+                <button id="signupBtn" class="btn btn-primary">Sign Up</button>
+            </div>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <!-- Social Login Buttons -->
+            <button id="googleLoginBtn" class="btn btn-google">🔍 Continue with Google</button>
+            <button id="phoneLoginBtn" class="btn btn-phone">📱 Login with Phone</button>
+        </div>
+
+        <!-- Phone Login Form (Hidden by default) -->
+        <div id="phoneLoginForm" class="login-container hidden">
+            <div class="logo">🎮 GameLoot</div>
+            <div class="tagline">Login with your phone number</div>
+            
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="tel" id="phoneNumber" placeholder="+1234567890">
+            </div>
+            <button id="sendOtpBtn" class="btn btn-primary">Send OTP</button>
+            
+            <div id="otpSection" class="hidden">
+                <div class="form-group">
+                    <label for="otpCode">Enter OTP</label>
+                    <input type="text" id="otpCode" placeholder="123456">
+                </div>
+                <button id="verifyOtpBtn" class="btn btn-primary">Verify OTP</button>
+            </div>
+            
+            <button id="backToLoginBtn" class="btn" style="background: #666; color: white; margin-top: 10px;">Back to Login</button>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <!-- Header -->
+            <div class="header">
+                <div class="welcome-text">Welcome, <span id="userName">User</span>!</div>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+
+            <!-- Coin Balance -->
+            <div class="balance-card">
+                <div class="balance-amount" id="coinBalance">1,250</div>
+                <div class="balance-label">GameLoot Coins</div>
+            </div>
+
+            <!-- Earning Options -->
+            <div class="earning-options">
+                <div class="earning-card" id="watchEarnCard">
+                    <div class="earning-icon">👀</div>
+                    <div class="earning-title">Watch & Earn</div>
+                    <div class="earning-subtitle">+50 coins per video</div>
+                </div>
+
+                <div class="earning-card" id="loginEarnCard">
+                    <div class="earning-icon">📅</div>
+                    <div class="earning-title">Login & Earn</div>
+                    <div class="earning-subtitle">Daily bonus</div>
+                </div>
+
+                <div class="earning-card" id="followEarnCard">
+                    <div class="earning-icon">👥</div>
+                    <div class="earning-title">Follow & Earn</div>
+                    <div class="earning-subtitle">Social media</div>
+                </div>
+
+                <div class="earning-card" id="spinWinCard">
+                    <div class="earning-icon">🎰</div>
+                    <div class="earning-title">Spin & Win</div>
+                    <div class="earning-subtitle">Lucky wheel</div>
+                </div>
+
+                <div class="earning-card full-width" id="tournamentCard">
+                    <div class="earning-icon">🏆</div>
+                    <div class="earning-title">Join Tournament</div>
+                    <div class="earning-subtitle">Compete with others</div>
+                </div>
+            </div>
+
+            <!-- Referral Section -->
+            <div class="referral-section">
+                <h3>Referral & Earn</h3>
+                <div class="referral-code" id="userReferralCode">GAME123XYZ</div>
+                <div class="referral-input">
+                    <input type="text" id="referralInput" placeholder="Enter referral code">
+                    <button id="applyReferralBtn">Apply</button>
+                </div>
+                <div style="font-size: 12px; color: #666; text-align: center;">
+                    Share your code and earn 100 coins per referral!
+                </div>
+            </div>
+
+            <!-- User Profile -->
+            <div class="profile-section">
+                <h3>Profile</h3>
+                <div class="profile-item">
+                    <span class="profile-label">Player ID:</span>
+                    <span class="profile-value" id="playerId">GL123456</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">Email:</span>
+                    <span class="profile-value" id="userEmail">user@example.com</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">Phone:</span>
+                    <span class="profile-value" id="userPhone">+1234567890</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">Referral Used:</span>
+                    <span class="profile-value" id="referralUsed">None</span>
+                </div>
+            </div>
+
+            <!-- Withdraw Button -->
+            <button id="withdrawBtn" class="withdraw-btn">💰 Withdraw Coins</button>
+        </div>
+    </div>
+
+    <!-- Spin & Win Modal -->
+    <div id="spinModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeSpin">&times;</span>
+            <h2>Spin & Win</h2>
+            <div class="spin-wheel" id="spinWheel">
+                <div class="spin-pointer"></div>
+            </div>
+            <button id="spinButton" class="spin-btn">SPIN!</button>
+            <div id="spinCooldown" class="cooldown-timer hidden">
+                Next spin available in: <span id="cooldownTime">24:00:00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Follow & Earn Modal -->
+    <div id="followModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeFollow">&times;</span>
+            <h2>Follow & Earn</h2>
+            <p>Follow our social media accounts to earn coins!</p>
+            <div class="social-buttons">
+                <button id="followInstagram" class="social-btn instagram-btn">📷 Instagram</button>
+                <button id="followYoutube" class="social-btn youtube-btn">📺 YouTube</button>
+            </div>
+            <div style="margin-top: 15px; font-size: 12px; color: #666; text-align: center;">
+                Earn 25 coins for each follow!
+            </div>
+        </div>
+    </div>
+
+    <!-- Tournament Modal -->
+    <div id="tournamentModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeTournament">&times;</span>
+            <h2>Active Tournaments</h2>
+            <div class="tournament-list" id="tournamentList">
+                <!-- Tournament items will be populated by JavaScript -->
+                <div class="tournament-item">
+                    <div class="tournament-name">PUBG Mobile Championship</div>
+                    <div class="tournament-details">
+                        <span>Entry: 100 coins</span>
+                        <span>Prize: 5000 coins</span>
+                    </div>
+                </div>
+                <div class="tournament-item">
+                    <div class="tournament-name">Free Fire Battle</div>
+                    <div class="tournament-details">
+                        <span>Entry: 50 coins</span>
+                        <span>Prize: 2000 coins</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Watch & Earn Modal -->
+    <div id="watchModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeWatch">&times;</span>
+            <h2>Watch & Earn</h2>
+            <div id="videoContainer" style="text-align: center; margin: 20px 0;">
+                <div style="background: #f0f0f0; padding: 40px; border-radius: 10px;">
+                    📺 Video Player Area
+                    <br><br>
+                    <button id="watchVideoBtn" class="btn btn-primary">Watch Video (+50 coins)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeWithdraw">&times;</span>
+            <h2>Withdraw Coins</h2>
+            <div class="form-group">
+                <label for="withdrawAmount">Amount (coins)</label>
+                <input type="number" id="withdrawAmount" placeholder="Enter amount" min="100">
+            </div>
+            <div class="form-group">
+                <label for="withdrawMethod">Payment Method</label>
+                <select id="withdrawMethod" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                    <option value="gpay">Google Pay</option>
+                    <option value="phonepe">PhonePe</option>
+                    <option value="playstore">Play Store Credits</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="withdrawDetails">Payment Details</label>
+                <input type="text" id="withdrawDetails" placeholder="Enter UPI ID or phone number">
+            </div>
+            <button id="submitWithdrawBtn" class="btn btn-primary">Submit Withdrawal Request</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK will be initialized externally -->
+    <!-- JavaScript hooks for Firebase integration -->
+    <script>
+        // DOM Elements - Ready for Firebase integration
+        const loginPage = document.getElementById('loginPage');
+        const phoneLoginForm = document.getElementById('phoneLoginForm');
+        const dashboard = document.getElementById('dashboard');
+        
+        // Login elements
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+        const phoneLoginBtn = document.getElementById('phoneLoginBtn');
+        const backToLoginBtn = document.getElementById('backToLoginBtn');
+        
+        // Phone login elements
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const sendOtpBtn = document.getElementById('sendOtpBtn');
+        const otpSection = document.getElementById('otpSection');
+        const otpCodeInput = document.getElementById('otpCode');
+        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+        
+        // Dashboard elements
+        const userName = document.getElementById('userName');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const coinBalance = document.getElementById('coinBalance');
+        const playerId = document.getElementById('playerId');
+        const userEmail = document.getElementById('userEmail');
+        const userPhone = document.getElementById('userPhone');
+        const referralUsed = document.getElementById('referralUsed');
+        const userReferralCode = document.getElementById('userReferralCode');
+        
+        // Earning cards
+        const watchEarnCard = document.getElementById('watchEarnCard');
+        const loginEarnCard = document.getElementById('loginEarnCard');
+        const followEarnCard = document.getElementById('followEarnCard');
+        const spinWinCard = document.getElementById('spinWinCard');
+        const tournamentCard = document.getElementById('tournamentCard');
+        
+        // Modals
+        const spinModal = document.getElementById('spinModal');
+        const followModal = document.getElementById('followModal');
+        const tournamentModal = document.getElementById('tournamentModal');
+        const watchModal = document.getElementById('watchModal');
+        const withdrawModal = document.getElementById('withdrawModal');
+        
+        // Buttons
+        const withdrawBtn = document.getElementById('withdrawBtn');
+        const applyReferralBtn = document.getElementById('applyReferralBtn');
+        const referralInput = document.getElementById('referralInput');
+        
+        // Basic modal functionality
+        function showModal(modal) {
+            modal.style.display = 'block';
+        }
+        
+        function hideModal(modal) {
+            modal.style.display = 'none';
+        }
+        
+        // Modal event listeners
+        document.getElementById('closeSpin').onclick = () => hideModal(spinModal);
+        document.getElementById('closeFollow').onclick = () => hideModal(followModal);
+        document.getElementById('closeTournament').onclick = () => hideModal(tournamentModal);
+        document.getElementById('closeWatch').onclick = () => hideModal(watchModal);
+        document.getElementById('closeWithdraw').onclick = () => hideModal(withdrawModal);
+        
+        // Card click handlers
+        watchEarnCard.onclick = () => showModal(watchModal);
+        followEarnCard.onclick = () => showModal(followModal);
+        spinWinCard.onclick = () => showModal(spinModal);
+        tournamentCard.onclick = () => showModal(tournamentModal);
+        withdrawBtn.onclick = () => showModal(withdrawModal);
+        
+        // Phone login toggle
+        phoneLoginBtn.onclick = () => {
+            loginPage.classList.add('hidden');
+            phoneLoginForm.classList.remove('hidden');
+        };
+        
+        backToLoginBtn.onclick = () => {
+            phoneLoginForm.classList.add('hidden');
+            loginPage.classList.remove('hidden');
+        };
+        
+        // Show dashboard (for testing - remove when Firebase is integrated)
+        // dashboard.style.display = 'block';
+        // loginPage.style.display = 'none';
+        
+        // All Firebase authentication and data management will be handled externally
+        // This HTML structure provides all necessary hooks and IDs for integration
+    </script>
+</body>
+</html>
