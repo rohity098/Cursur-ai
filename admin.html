@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameLoot Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Firebase Config Section */
+        .firebase-config {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .config-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .config-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .config-status.connected {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .config-status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .config-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .config-form.hidden {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #1e7e34;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .admin-logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .admin-tagline {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .summary-card .number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        /* Section Styles */
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #555;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Form Styles */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .config-form {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Firebase Configuration Section -->
+        <div id="firebaseConfigSection" class="firebase-config">
+            <div class="config-header">
+                <h2>Firebase Configuration</h2>
+                <div class="config-status disconnected" id="configStatus">Disconnected</div>
+            </div>
+            
+            <div class="config-form" id="configForm">
+                <div class="form-group">
+                    <label for="apiKey">API Key</label>
+                    <input type="text" id="apiKey" placeholder="Enter Firebase API Key">
+                </div>
+                <div class="form-group">
+                    <label for="authDomain">Auth Domain</label>
+                    <input type="text" id="authDomain" placeholder="your-project.firebaseapp.com">
+                </div>
+                <div class="form-group">
+                    <label for="projectId">Project ID</label>
+                    <input type="text" id="projectId" placeholder="your-project-id">
+                </div>
+                <div class="form-group">
+                    <label for="storageBucket">Storage Bucket</label>
+                    <input type="text" id="storageBucket" placeholder="your-project.appspot.com">
+                </div>
+                <div class="form-group">
+                    <label for="messagingSenderId">Messaging Sender ID</label>
+                    <input type="text" id="messagingSenderId" placeholder="123456789">
+                </div>
+                <div class="form-group">
+                    <label for="appId">App ID</label>
+                    <input type="text" id="appId" placeholder="1:123456789:web:abcdef">
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button id="toggleConfigBtn" class="btn btn-secondary">Show Configuration</button>
+                <button id="testConnectionBtn" class="btn btn-primary">Test Connection</button>
+                <button id="saveConfigBtn" class="btn btn-success">Save Configuration</button>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="loginPage" class="login-container">
+            <div class="admin-logo">🛡️ GameLoot Admin</div>
+            <div class="admin-tagline">Administrative Dashboard</div>
+            
+            <div class="form-group">
+                <label for="adminEmail">Admin Email</label>
+                <input type="email" id="adminEmail" placeholder="admin@gameloot.com">
+            </div>
+            <div class="form-group">
+                <label for="adminPassword">Password</label>
+                <input type="password" id="adminPassword" placeholder="Enter admin password">
+            </div>
+            <button id="adminLoginBtn" class="btn btn-primary" style="width: 100%;">Login to Admin Panel</button>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="dashboard-title">GameLoot Admin Dashboard</div>
+                <button id="adminLogoutBtn" class="logout-btn">Logout</button>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3>Total Users</h3>
+                    <div class="number" id="totalUsers">1,234</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Total Coins Distributed</h3>
+                    <div class="number" id="totalCoins">567,890</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Pending Withdrawals</h3>
+                    <div class="number" id="pendingWithdrawals">45</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Active Tournaments</h3>
+                    <div class="number" id="activeTournaments">8</div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">Users Management</div>
+                    <button id="refreshUsersBtn" class="btn btn-primary">Refresh Users</button>
+                </div>
+                <div class="table-container">
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>Player ID</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Coins</th>
+                                <th>Referral Used</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Sample data - will be populated by JavaScript -->
+                            <tr>
+                                <td>GL123456</td>
+                                <td>user1@example.com</td>
+                                <td>+1234567890</td>
+                                <td>1,250</td>
+                                <td>GAME789</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning edit-coins-btn" data-user-id="GL123456">Edit Coins</button>
+                                    <button class="btn btn-sm btn-danger reset-user-btn" data-user-id="GL123456">Reset</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>GL123457</td>
+                                <td>user2@example.com</td>
+                                <td>+1234567891</td>
+                                <td>2,100</td>
+                                <td>None</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning edit-coins-btn" data-user-id="GL123457">Edit Coins</button>
+                                    <button class="btn btn-sm btn-danger reset-user-btn" data-user-id="GL123457">Reset</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Withdrawals Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">Withdrawal Requests</div>
+                    <button id="refreshWithdrawalsBtn" class="btn btn-primary">Refresh</button>
+                </div>
+                <div class="table-container">
+                    <table id="withdrawalsTable">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>User ID</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Details</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="withdrawalsTableBody">
+                            <!-- Sample data - will be populated by JavaScript -->
+                            <tr>
+                                <td>WD001</td>
+                                <td>GL123456</td>
+                                <td>500</td>
+                                <td>GPay</td>
+                                <td>user@upi</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-success approve-withdrawal-btn" data-withdrawal-id="WD001">Approve</button>
+                                    <button class="btn btn-sm btn-danger reject-withdrawal-btn" data-withdrawal-id="WD001">Reject</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>WD002</td>
+                                <td>GL123457</td>
+                                <td>1000</td>
+                                <td>PhonePe</td>
+                                <td>+1234567890</td>
+                                <td><span class="status-badge status-approved">Approved</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary" disabled>Processed</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tournaments Section -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">Tournaments Management</div>
+                    <button id="createTournamentBtn" class="btn btn-success">Create Tournament</button>
+                </div>
+                
+                <!-- Tournament Creation Form -->
+                <div id="tournamentForm" class="hidden">
+                    <h4>Create New Tournament</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tournamentGame">Game</label>
+                            <select id="tournamentGame">
+                                <option value="pubg">PUBG Mobile</option>
+                                <option value="freefire">Free Fire</option>
+                                <option value="codm">Call of Duty Mobile</option>
+                                <option value="bgmi">BGMI</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tournamentEntry">Entry Fee (coins)</label>
+                            <input type="number" id="tournamentEntry" placeholder="100">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tournamentPrize">Prize Pool (coins)</label>
+                            <input type="number" id="tournamentPrize" placeholder="5000">
+                        </div>
+                        <div class="form-group">
+                            <label for="tournamentMaxPlayers">Max Players</label>
+                            <input type="number" id="tournamentMaxPlayers" placeholder="100">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tournamentDate">Date</label>
+                            <input type="date" id="tournamentDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="tournamentTime">Time</label>
+                            <input type="time" id="tournamentTime">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button id="cancelTournamentBtn" class="btn btn-secondary">Cancel</button>
+                        <button id="saveTournamentBtn" class="btn btn-success">Create Tournament</button>
+                    </div>
+                </div>
+
+                <!-- Tournaments Table -->
+                <div class="table-container">
+                    <table id="tournamentsTable">
+                        <thead>
+                            <tr>
+                                <th>Tournament ID</th>
+                                <th>Game</th>
+                                <th>Entry Fee</th>
+                                <th>Prize Pool</th>
+                                <th>Players</th>
+                                <th>Date & Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tournamentsTableBody">
+                            <!-- Sample data - will be populated by JavaScript -->
+                            <tr>
+                                <td>T001</td>
+                                <td>PUBG Mobile</td>
+                                <td>100</td>
+                                <td>5,000</td>
+                                <td>45/100</td>
+                                <td>2024-01-15 18:00</td>
+                                <td><span class="status-badge status-pending">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary edit-tournament-btn" data-tournament-id="T001">Edit</button>
+                                    <button class="btn btn-sm btn-success declare-winner-btn" data-tournament-id="T001">Declare Winner</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>T002</td>
+                                <td>Free Fire</td>
+                                <td>50</td>
+                                <td>2,000</td>
+                                <td>30/50</td>
+                                <td>2024-01-16 20:00</td>
+                                <td><span class="status-badge status-approved">Completed</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary" disabled>Finished</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Coins Modal -->
+    <div id="editCoinsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit User Coins</h3>
+                <span class="close" id="closeEditCoins">&times;</span>
+            </div>
+            <div class="form-group">
+                <label for="editUserId">User ID</label>
+                <input type="text" id="editUserId" readonly>
+            </div>
+            <div class="form-group">
+                <label for="editCoinsAmount">New Coin Amount</label>
+                <input type="number" id="editCoinsAmount" placeholder="Enter new amount">
+            </div>
+            <div class="form-actions">
+                <button id="cancelEditCoins" class="btn btn-secondary">Cancel</button>
+                <button id="saveEditCoins" class="btn btn-success">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Declare Winner Modal -->
+    <div id="declareWinnerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Declare Tournament Winner</h3>
+                <span class="close" id="closeDeclareWinner">&times;</span>
+            </div>
+            <div class="form-group">
+                <label for="winnerTournamentId">Tournament ID</label>
+                <input type="text" id="winnerTournamentId" readonly>
+            </div>
+            <div class="form-group">
+                <label for="winnerUserId">Winner User ID</label>
+                <input type="text" id="winnerUserId" placeholder="Enter winner's user ID">
+            </div>
+            <div class="form-group">
+                <label for="winnerPrize">Prize Amount</label>
+                <input type="number" id="winnerPrize" placeholder="Prize amount">
+            </div>
+            <div class="form-actions">
+                <button id="cancelDeclareWinner" class="btn btn-secondary">Cancel</button>
+                <button id="saveDeclareWinner" class="btn btn-success">Declare Winner</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript hooks for Firebase integration -->
+    <script>
+        // Firebase Configuration Management
+        let firebaseConfig = null;
+        let firebaseInitialized = false;
+
+        // DOM Elements
+        const firebaseConfigSection = document.getElementById('firebaseConfigSection');
+        const configStatus = document.getElementById('configStatus');
+        const configForm = document.getElementById('configForm');
+        const toggleConfigBtn = document.getElementById('toggleConfigBtn');
+        const testConnectionBtn = document.getElementById('testConnectionBtn');
+        const saveConfigBtn = document.getElementById('saveConfigBtn');
+        
+        // Configuration inputs
+        const apiKeyInput = document.getElementById('apiKey');
+        const authDomainInput = document.getElementById('authDomain');
+        const projectIdInput = document.getElementById('projectId');
+        const storageBucketInput = document.getElementById('storageBucket');
+        const messagingSenderIdInput = document.getElementById('messagingSenderId');
+        const appIdInput = document.getElementById('appId');
+
+        // Login and Dashboard elements
+        const loginPage = document.getElementById('loginPage');
+        const dashboard = document.getElementById('dashboard');
+        const adminEmailInput = document.getElementById('adminEmail');
+        const adminPasswordInput = document.getElementById('adminPassword');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+
+        // Tournament form elements
+        const createTournamentBtn = document.getElementById('createTournamentBtn');
+        const tournamentForm = document.getElementById('tournamentForm');
+        const cancelTournamentBtn = document.getElementById('cancelTournamentBtn');
+        const saveTournamentBtn = document.getElementById('saveTournamentBtn');
+
+        // Modal elements
+        const editCoinsModal = document.getElementById('editCoinsModal');
+        const declareWinnerModal = document.getElementById('declareWinnerModal');
+
+        // Firebase Configuration Functions
+        function toggleConfigForm() {
+            const isHidden = configForm.classList.contains('hidden');
+            configForm.classList.toggle('hidden');
+            toggleConfigBtn.textContent = isHidden ? 'Hide Configuration' : 'Show Configuration';
+        }
+
+        function loadSavedConfig() {
+            const savedConfig = localStorage.getItem('gameloot_firebase_config');
+            if (savedConfig) {
+                const config = JSON.parse(savedConfig);
+                apiKeyInput.value = config.apiKey || '';
+                authDomainInput.value = config.authDomain || '';
+                projectIdInput.value = config.projectId || '';
+                storageBucketInput.value = config.storageBucket || '';
+                messagingSenderIdInput.value = config.messagingSenderId || '';
+                appIdInput.value = config.appId || '';
+                
+                firebaseConfig = config;
+                updateConfigStatus(true);
+            }
+        }
+
+        function saveConfig() {
+            const config = {
+                apiKey: apiKeyInput.value.trim(),
+                authDomain: authDomainInput.value.trim(),
+                projectId: projectIdInput.value.trim(),
+                storageBucket: storageBucketInput.value.trim(),
+                messagingSenderId: messagingSenderIdInput.value.trim(),
+                appId: appIdInput.value.trim()
+            };
+
+            // Validate required fields
+            if (!config.apiKey || !config.authDomain || !config.projectId) {
+                alert('Please fill in at least API Key, Auth Domain, and Project ID');
+                return;
+            }
+
+            localStorage.setItem('gameloot_firebase_config', JSON.stringify(config));
+            firebaseConfig = config;
+            updateConfigStatus(true);
+            alert('Configuration saved successfully!');
+        }
+
+        function testConnection() {
+            if (!firebaseConfig) {
+                alert('Please save configuration first');
+                return;
+            }
+
+            // This would be where you actually test the Firebase connection
+            // For now, we'll simulate a test
+            testConnectionBtn.textContent = 'Testing...';
+            testConnectionBtn.disabled = true;
+
+            setTimeout(() => {
+                // Simulate successful connection
+                updateConfigStatus(true);
+                testConnectionBtn.textContent = 'Test Connection';
+                testConnectionBtn.disabled = false;
+                alert('Connection test successful!');
+            }, 2000);
+        }
+
+        function updateConfigStatus(connected) {
+            configStatus.textContent = connected ? 'Connected' : 'Disconnected';
+            configStatus.className = `config-status ${connected ? 'connected' : 'disconnected'}`;
+            firebaseInitialized = connected;
+        }
+
+        // Modal Functions
+        function showModal(modal) {
+            modal.style.display = 'block';
+        }
+
+        function hideModal(modal) {
+            modal.style.display = 'none';
+        }
+
+        // Event Listeners
+        toggleConfigBtn.addEventListener('click', toggleConfigForm);
+        saveConfigBtn.addEventListener('click', saveConfig);
+        testConnectionBtn.addEventListener('click', testConnection);
+
+        // Tournament form toggle
+        createTournamentBtn.addEventListener('click', () => {
+            tournamentForm.classList.remove('hidden');
+            createTournamentBtn.style.display = 'none';
+        });
+
+        cancelTournamentBtn.addEventListener('click', () => {
+            tournamentForm.classList.add('hidden');
+            createTournamentBtn.style.display = 'block';
+        });
+
+        // Modal close handlers
+        document.getElementById('closeEditCoins').addEventListener('click', () => hideModal(editCoinsModal));
+        document.getElementById('closeDeclareWinner').addEventListener('click', () => hideModal(declareWinnerModal));
+
+        // Table action handlers (using event delegation)
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('edit-coins-btn')) {
+                const userId = e.target.dataset.userId;
+                document.getElementById('editUserId').value = userId;
+                showModal(editCoinsModal);
+            }
+            
+            if (e.target.classList.contains('declare-winner-btn')) {
+                const tournamentId = e.target.dataset.tournamentId;
+                document.getElementById('winnerTournamentId').value = tournamentId;
+                showModal(declareWinnerModal);
+            }
+        });
+
+        // Admin login handler
+        adminLoginBtn.addEventListener('click', () => {
+            if (!firebaseInitialized) {
+                alert('Please configure and test Firebase connection first');
+                return;
+            }
+            
+            const email = adminEmailInput.value.trim();
+            const password = adminPasswordInput.value.trim();
+            
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+            
+            // Firebase authentication would go here
+            // For now, simulate login
+            loginPage.style.display = 'none';
+            dashboard.style.display = 'block';
+        });
+
+        // Admin logout handler
+        adminLogoutBtn.addEventListener('click', () => {
+            dashboard.style.display = 'none';
+            loginPage.style.display = 'block';
+            adminEmailInput.value = '';
+            adminPasswordInput.value = '';
+        });
+
+        // Initialize configuration on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSavedConfig();
+            configForm.classList.add('hidden'); // Hide form by default
+        });
+
+        // Export Firebase config for external use
+        window.getFirebaseConfig = () => firebaseConfig;
+        window.isFirebaseInitialized = () => firebaseInitialized;
+
+        // All Firebase authentication and data management will be handled externally
+        // This HTML structure provides all necessary hooks and IDs for integration
+    </script>
+</body>
+</html>

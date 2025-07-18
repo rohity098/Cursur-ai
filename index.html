@@ -24,6 +24,98 @@
             padding: 20px;
         }
 
+        /* Firebase Config Section */
+        .firebase-config {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .config-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .config-header h2 {
+            font-size: 18px;
+            color: #667eea;
+            margin: 0;
+        }
+
+        .config-status {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .config-status.connected {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .config-status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .config-form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .config-form input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .config-form label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 3px;
+        }
+
+        .config-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .config-actions .btn {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 12px;
+            margin-bottom: 0;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #1e7e34;
+        }
+
         /* Login Page Styles */
         .login-container {
             background: white;
@@ -473,6 +565,47 @@
 </head>
 <body>
     <div class="container">
+        <!-- Firebase Configuration Section -->
+        <div id="firebaseConfigSection" class="firebase-config">
+            <div class="config-header">
+                <h2>🔧 Firebase Setup</h2>
+                <div class="config-status disconnected" id="configStatus">Disconnected</div>
+            </div>
+            
+            <div class="config-form hidden" id="configForm">
+                <div class="form-group">
+                    <label for="apiKey">API Key</label>
+                    <input type="text" id="apiKey" placeholder="Enter Firebase API Key">
+                </div>
+                <div class="form-group">
+                    <label for="authDomain">Auth Domain</label>
+                    <input type="text" id="authDomain" placeholder="your-project.firebaseapp.com">
+                </div>
+                <div class="form-group">
+                    <label for="projectId">Project ID</label>
+                    <input type="text" id="projectId" placeholder="your-project-id">
+                </div>
+                <div class="form-group">
+                    <label for="storageBucket">Storage Bucket</label>
+                    <input type="text" id="storageBucket" placeholder="your-project.appspot.com">
+                </div>
+                <div class="form-group">
+                    <label for="messagingSenderId">Messaging Sender ID</label>
+                    <input type="text" id="messagingSenderId" placeholder="123456789">
+                </div>
+                <div class="form-group">
+                    <label for="appId">App ID</label>
+                    <input type="text" id="appId" placeholder="1:123456789:web:abcdef">
+                </div>
+            </div>
+            
+            <div class="config-actions">
+                <button id="toggleConfigBtn" class="btn btn-secondary">Show Configuration</button>
+                <button id="testConnectionBtn" class="btn btn-primary">Test Connection</button>
+                <button id="saveConfigBtn" class="btn btn-success">Save Configuration</button>
+            </div>
+        </div>
+
         <!-- Login Page -->
         <div id="loginPage" class="login-container">
             <div class="logo">🎮 GameLoot</div>
@@ -708,10 +841,30 @@
     <!-- Firebase SDK will be initialized externally -->
     <!-- JavaScript hooks for Firebase integration -->
     <script>
+        // Firebase Configuration Management
+        let firebaseConfig = null;
+        let firebaseInitialized = false;
+
         // DOM Elements - Ready for Firebase integration
         const loginPage = document.getElementById('loginPage');
         const phoneLoginForm = document.getElementById('phoneLoginForm');
         const dashboard = document.getElementById('dashboard');
+        
+        // Firebase config elements
+        const firebaseConfigSection = document.getElementById('firebaseConfigSection');
+        const configStatus = document.getElementById('configStatus');
+        const configForm = document.getElementById('configForm');
+        const toggleConfigBtn = document.getElementById('toggleConfigBtn');
+        const testConnectionBtn = document.getElementById('testConnectionBtn');
+        const saveConfigBtn = document.getElementById('saveConfigBtn');
+        
+        // Configuration inputs
+        const apiKeyInput = document.getElementById('apiKey');
+        const authDomainInput = document.getElementById('authDomain');
+        const projectIdInput = document.getElementById('projectId');
+        const storageBucketInput = document.getElementById('storageBucket');
+        const messagingSenderIdInput = document.getElementById('messagingSenderId');
+        const appIdInput = document.getElementById('appId');
         
         // Login elements
         const emailInput = document.getElementById('email');
@@ -758,6 +911,77 @@
         const applyReferralBtn = document.getElementById('applyReferralBtn');
         const referralInput = document.getElementById('referralInput');
         
+        // Firebase Configuration Functions
+        function toggleConfigForm() {
+            const isHidden = configForm.classList.contains('hidden');
+            configForm.classList.toggle('hidden');
+            toggleConfigBtn.textContent = isHidden ? 'Hide Config' : 'Show Config';
+        }
+
+        function loadSavedConfig() {
+            const savedConfig = localStorage.getItem('gameloot_user_firebase_config');
+            if (savedConfig) {
+                const config = JSON.parse(savedConfig);
+                apiKeyInput.value = config.apiKey || '';
+                authDomainInput.value = config.authDomain || '';
+                projectIdInput.value = config.projectId || '';
+                storageBucketInput.value = config.storageBucket || '';
+                messagingSenderIdInput.value = config.messagingSenderId || '';
+                appIdInput.value = config.appId || '';
+                
+                firebaseConfig = config;
+                updateConfigStatus(true);
+            }
+        }
+
+        function saveConfig() {
+            const config = {
+                apiKey: apiKeyInput.value.trim(),
+                authDomain: authDomainInput.value.trim(),
+                projectId: projectIdInput.value.trim(),
+                storageBucket: storageBucketInput.value.trim(),
+                messagingSenderId: messagingSenderIdInput.value.trim(),
+                appId: appIdInput.value.trim()
+            };
+
+            // Validate required fields
+            if (!config.apiKey || !config.authDomain || !config.projectId) {
+                alert('Please fill in at least API Key, Auth Domain, and Project ID');
+                return;
+            }
+
+            localStorage.setItem('gameloot_user_firebase_config', JSON.stringify(config));
+            firebaseConfig = config;
+            updateConfigStatus(true);
+            alert('Configuration saved successfully!');
+        }
+
+        function testConnection() {
+            if (!firebaseConfig) {
+                alert('Please save configuration first');
+                return;
+            }
+
+            // This would be where you actually test the Firebase connection
+            // For now, we'll simulate a test
+            testConnectionBtn.textContent = 'Testing...';
+            testConnectionBtn.disabled = true;
+
+            setTimeout(() => {
+                // Simulate successful connection
+                updateConfigStatus(true);
+                testConnectionBtn.textContent = 'Test Connection';
+                testConnectionBtn.disabled = false;
+                alert('Connection test successful! You can now login.');
+            }, 2000);
+        }
+
+        function updateConfigStatus(connected) {
+            configStatus.textContent = connected ? 'Connected' : 'Disconnected';
+            configStatus.className = `config-status ${connected ? 'connected' : 'disconnected'}`;
+            firebaseInitialized = connected;
+        }
+
         // Basic modal functionality
         function showModal(modal) {
             modal.style.display = 'block';
@@ -781,8 +1005,17 @@
         tournamentCard.onclick = () => showModal(tournamentModal);
         withdrawBtn.onclick = () => showModal(withdrawModal);
         
+        // Firebase configuration event listeners
+        toggleConfigBtn.onclick = toggleConfigForm;
+        saveConfigBtn.onclick = saveConfig;
+        testConnectionBtn.onclick = testConnection;
+
         // Phone login toggle
         phoneLoginBtn.onclick = () => {
+            if (!firebaseInitialized) {
+                alert('Please configure and test Firebase connection first');
+                return;
+            }
             loginPage.classList.add('hidden');
             phoneLoginForm.classList.remove('hidden');
         };
@@ -791,10 +1024,44 @@
             phoneLoginForm.classList.add('hidden');
             loginPage.classList.remove('hidden');
         };
+
+        // Add Firebase check to login buttons
+        loginBtn.onclick = () => {
+            if (!firebaseInitialized) {
+                alert('Please configure and test Firebase connection first');
+                return;
+            }
+            // Firebase login logic would go here
+        };
+
+        signupBtn.onclick = () => {
+            if (!firebaseInitialized) {
+                alert('Please configure and test Firebase connection first');
+                return;
+            }
+            // Firebase signup logic would go here
+        };
+
+        googleLoginBtn.onclick = () => {
+            if (!firebaseInitialized) {
+                alert('Please configure and test Firebase connection first');
+                return;
+            }
+            // Firebase Google login logic would go here
+        };
         
+        // Initialize Firebase configuration on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSavedConfig();
+        });
+
         // Show dashboard (for testing - remove when Firebase is integrated)
         // dashboard.style.display = 'block';
         // loginPage.style.display = 'none';
+        
+        // Export Firebase config for external use
+        window.getFirebaseConfig = () => firebaseConfig;
+        window.isFirebaseInitialized = () => firebaseInitialized;
         
         // All Firebase authentication and data management will be handled externally
         // This HTML structure provides all necessary hooks and IDs for integration
