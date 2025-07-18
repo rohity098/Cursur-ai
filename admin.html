@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameLoot Admin - Management Dashboard</title>
+    <title>GameLoot Admin - Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -12,58 +12,57 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-            color: #ffffff;
-            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
         }
 
-        /* Firebase Configuration */
+        /* Firebase Configuration - Minimal */
         .firebase-config {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 15px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
             margin: 10px;
-            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .config-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
-        .config-header h3 {
+        .config-header h4 {
             font-size: 14px;
-            color: #00d4ff;
+            color: #475569;
             margin: 0;
         }
 
         .config-status {
-            padding: 3px 8px;
+            padding: 2px 8px;
             border-radius: 12px;
-            font-size: 10px;
-            font-weight: bold;
+            font-size: 11px;
+            font-weight: 500;
         }
 
         .config-status.connected {
-            background: #00ff88;
-            color: #000;
+            background: #dcfce7;
+            color: #166534;
         }
 
         .config-status.disconnected {
-            background: #ff4757;
-            color: #fff;
+            background: #fee2e2;
+            color: #dc2626;
         }
 
         .config-form {
             display: none;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .config-form.show {
@@ -71,206 +70,187 @@
         }
 
         .config-form input {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
             border-radius: 6px;
-            padding: 6px;
-            color: #fff;
-            font-size: 11px;
+            padding: 6px 8px;
+            font-size: 12px;
+            color: #475569;
         }
 
-        .config-form input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+        .config-form input:focus {
+            outline: none;
+            border-color: #3b82f6;
         }
 
         .config-actions {
             display: flex;
-            gap: 5px;
+            gap: 4px;
         }
 
         .config-btn {
             flex: 1;
-            padding: 6px 8px;
+            padding: 4px 8px;
             border: none;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: bold;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
 
         .config-btn.primary {
-            background: #00d4ff;
-            color: #000;
+            background: #3b82f6;
+            color: white;
         }
 
         .config-btn.success {
-            background: #00ff88;
-            color: #000;
+            background: #10b981;
+            color: white;
         }
 
         .config-btn.secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            background: #f1f5f9;
+            color: #475569;
         }
 
         /* Login Screen */
         .login-screen {
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             padding: 20px;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         .login-container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+            background: white;
+            border-radius: 16px;
             padding: 40px;
             width: 100%;
             max-width: 450px;
-            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         .admin-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            text-align: center;
+            margin-bottom: 32px;
         }
 
-        .admin-logo .logo-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-        }
-
-        .admin-logo .logo-text {
+        .admin-logo h1 {
             font-size: 32px;
-            font-weight: bold;
-            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
         }
 
-        .admin-tagline {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 30px;
+        .admin-logo p {
+            color: #64748b;
             font-size: 16px;
         }
 
         .form-group {
             margin-bottom: 20px;
-            text-align: left;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 14px;
             font-weight: 500;
+            color: #374151;
+            font-size: 14px;
         }
 
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            color: #fff;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
             font-size: 16px;
-            transition: all 0.3s;
+            transition: border-color 0.2s;
         }
 
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
-            border-color: #ff6b6b;
-            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
-        }
-
-        .form-group input::placeholder, .form-group textarea::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .btn {
-            padding: 15px 30px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn:hover:before {
-            left: 100%;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-primary {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-            color: #fff;
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
         }
 
         .btn-success {
-            background: linear-gradient(45deg, #00ff88, #00cc66);
-            color: #000;
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
         }
 
         .btn-danger {
-            background: linear-gradient(45deg, #ff4757, #c44569);
-            color: #fff;
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
         }
 
         .btn-warning {
-            background: linear-gradient(45deg, #ffa726, #ff9800);
-            color: #000;
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
         }
 
         .btn-sm {
-            padding: 8px 16px;
-            font-size: 12px;
+            padding: 6px 12px;
+            font-size: 14px;
         }
 
         .btn-full {
             width: 100%;
+            justify-content: center;
         }
 
         /* Dashboard */
         .dashboard {
             display: none;
             min-height: 100vh;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            background: #f8fafc;
         }
 
         /* Sidebar */
@@ -278,274 +258,273 @@
             position: fixed;
             left: 0;
             top: 0;
-            width: 250px;
+            width: 260px;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
             overflow-y: auto;
             z-index: 1000;
         }
 
         .sidebar-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px 20px;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        .sidebar-header .logo {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .sidebar-header h2 {
             font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 4px;
         }
 
-        .sidebar-header .title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #fff;
+        .sidebar-header p {
+            font-size: 14px;
+            color: #64748b;
         }
 
-        .sidebar-menu {
-            list-style: none;
+        .sidebar-nav {
+            padding: 20px 0;
         }
 
-        .sidebar-menu li {
-            margin-bottom: 5px;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 15px;
-            color: rgba(255, 255, 255, 0.7);
+        .nav-item {
+            display: block;
+            padding: 12px 20px;
+            color: #64748b;
             text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
         }
 
-        .sidebar-menu a:hover, .sidebar-menu a.active {
-            background: rgba(255, 107, 107, 0.1);
-            color: #ff6b6b;
+        .nav-item:hover, .nav-item.active {
+            background: #f8fafc;
+            color: #3b82f6;
+            border-left-color: #3b82f6;
         }
 
-        .sidebar-menu .icon {
-            font-size: 18px;
+        .nav-item.active {
+            background: #eff6ff;
+            color: #1d4ed8;
         }
 
         /* Main Content */
         .main-content {
-            margin-left: 250px;
-            padding: 20px;
+            margin-left: 260px;
             min-height: 100vh;
         }
 
         /* Header */
         .header {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .header-left h1 {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
         }
 
-        .header-left p {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-        }
-
-        .header-right {
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 16px;
         }
 
         .admin-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .admin-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            color: #fff;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .admin-details h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .admin-details p {
+            font-size: 12px;
+            color: #64748b;
         }
 
         .logout-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
             padding: 8px 16px;
-            color: #fff;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
-            transition: all 0.3s;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
         .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: #e2e8f0;
+        }
+
+        /* Content Area */
+        .content {
+            padding: 32px;
         }
 
         /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 24px;
+            margin-bottom: 32px;
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px;
-            text-align: center;
-            transition: all 0.3s;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.2s;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
-        .stat-card .icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
         }
 
-        .stat-card .number {
-            font-size: 36px;
-            font-weight: bold;
-            color: #fff;
-            margin-bottom: 5px;
-        }
-
-        .stat-card .label {
-            color: rgba(255, 255, 255, 0.7);
+        .stat-card-title {
             font-size: 14px;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .stat-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .stat-card-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .stat-card-change {
+            font-size: 14px;
+            color: #10b981;
+            font-weight: 500;
         }
 
         /* Section Card */
         .section-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            overflow: hidden;
         }
 
         .section-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .section-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
         }
 
-        /* Table Styles */
+        .section-content {
+            padding: 24px;
+        }
+
+        /* Table */
         .table-container {
             overflow-x: auto;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background: rgba(255, 255, 255, 0.02);
         }
 
         th, td {
-            padding: 15px;
+            padding: 12px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #f1f5f9;
         }
 
         th {
-            background: rgba(255, 255, 255, 0.05);
-            font-weight: bold;
-            color: #fff;
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
             font-size: 14px;
         }
 
         td {
-            color: rgba(255, 255, 255, 0.9);
+            color: #1e293b;
         }
 
         tr:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: #f8fafc;
         }
 
         .status-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
+            padding: 4px 8px;
+            border-radius: 12px;
             font-size: 12px;
-            font-weight: bold;
+            font-weight: 500;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .status-pending {
-            background: rgba(255, 167, 38, 0.2);
-            color: #ffa726;
-            border: 1px solid rgba(255, 167, 38, 0.3);
+            background: #fef3c7;
+            color: #92400e;
         }
 
         .status-approved {
-            background: rgba(0, 255, 136, 0.2);
-            color: #00ff88;
-            border: 1px solid rgba(0, 255, 136, 0.3);
+            background: #dcfce7;
+            color: #166534;
         }
 
         .status-rejected {
-            background: rgba(255, 71, 87, 0.2);
-            color: #ff4757;
-            border: 1px solid rgba(255, 71, 87, 0.3);
+            background: #fee2e2;
+            color: #dc2626;
         }
 
         /* Form Styles */
@@ -558,18 +537,18 @@
 
         .form-actions {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             justify-content: flex-end;
-            margin-top: 25px;
+            margin-top: 24px;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid #e2e8f0;
         }
 
         /* Tournament Form */
         .tournament-form {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;
         }
@@ -579,12 +558,13 @@
         }
 
         .tournament-form h4 {
-            color: #fff;
+            color: #1e293b;
             margin-bottom: 20px;
-            font-size: 20px;
+            font-size: 18px;
+            font-weight: 600;
         }
 
-        /* Modal Styles */
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -593,16 +573,14 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.5);
         }
 
         .modal-content {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: white;
             margin: 5% auto;
-            padding: 25px;
-            border-radius: 20px;
+            padding: 24px;
+            border-radius: 16px;
             width: 90%;
             max-width: 500px;
             max-height: 80vh;
@@ -613,30 +591,30 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .modal-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e293b;
         }
 
         .close {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 28px;
-            font-weight: bold;
+            background: none;
+            border: none;
+            font-size: 24px;
             cursor: pointer;
-            transition: color 0.3s;
+            color: #6b7280;
         }
 
         .close:hover {
-            color: #fff;
+            color: #374151;
         }
 
-        /* Responsive Design */
+        /* Mobile Responsive */
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -651,12 +629,31 @@
                 margin-left: 0;
             }
 
+            .mobile-menu-btn {
+                display: block;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 2001;
+                background: #3b82f6;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 10px;
+                cursor: pointer;
+                font-size: 18px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
             .header {
-                padding: 15px;
+                padding: 16px 20px;
             }
 
             .stats-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                grid-template-columns: 1fr;
             }
         }
 
@@ -669,42 +666,18 @@
                 flex-direction: column;
             }
 
-            .header-right {
+            .header-actions {
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
             }
+        }
 
-            .section-header {
-                flex-direction: column;
-                gap: 15px;
-                align-items: flex-start;
-            }
+        .mobile-menu-btn {
+            display: none;
         }
 
         .hidden {
             display: none;
-        }
-
-        /* Mobile Menu Button */
-        .mobile-menu-btn {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 2001;
-            background: rgba(255, 107, 107, 0.9);
-            border: none;
-            border-radius: 8px;
-            padding: 10px;
-            color: #fff;
-            cursor: pointer;
-            font-size: 18px;
-        }
-
-        @media (max-width: 1024px) {
-            .mobile-menu-btn {
-                display: block;
-            }
         }
     </style>
 </head>
@@ -715,7 +688,7 @@
     <!-- Firebase Configuration -->
     <div id="firebaseConfigSection" class="firebase-config">
         <div class="config-header">
-            <h3>⚙️ Firebase Configuration</h3>
+            <h4>Firebase Configuration</h4>
             <div class="config-status disconnected" id="configStatus">Disconnected</div>
         </div>
         
@@ -724,7 +697,7 @@
             <input type="text" id="authDomain" placeholder="Auth Domain">
             <input type="text" id="projectId" placeholder="Project ID">
             <input type="text" id="storageBucket" placeholder="Storage Bucket">
-            <input type="text" id="messagingSenderId" placeholder="Messaging Sender ID">
+            <input type="text" id="messagingSenderId" placeholder="Sender ID">
             <input type="text" id="appId" placeholder="App ID">
         </div>
         
@@ -739,10 +712,9 @@
     <div id="loginScreen" class="login-screen">
         <div class="login-container">
             <div class="admin-logo">
-                <div class="logo-icon">🛡️</div>
-                <div class="logo-text">GameLoot Admin</div>
+                <h1>🛡️ GameLoot Admin</h1>
+                <p>Administrative Dashboard</p>
             </div>
-            <div class="admin-tagline">Administrative Management Dashboard</div>
             
             <div class="form-group">
                 <label for="adminEmail">Administrator Email</label>
@@ -752,7 +724,7 @@
                 <label for="adminPassword">Password</label>
                 <input type="password" id="adminPassword" placeholder="Enter admin password">
             </div>
-            <button id="adminLoginBtn" class="btn btn-primary btn-full">Access Admin Panel</button>
+            <button id="adminLoginBtn" class="btn btn-primary btn-full">Access Dashboard</button>
         </div>
     </div>
 
@@ -761,360 +733,359 @@
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <div class="logo">🛡️</div>
-                <div class="title">GameLoot Admin</div>
+                <h2>GameLoot Admin</h2>
+                <p>Management Console</p>
             </div>
             
-            <ul class="sidebar-menu">
-                <li><a href="#" class="active" data-section="overview"><span class="icon">📊</span> Overview</a></li>
-                <li><a href="#" data-section="users"><span class="icon">👥</span> Users</a></li>
-                <li><a href="#" data-section="withdrawals"><span class="icon">💳</span> Withdrawals</a></li>
-                <li><a href="#" data-section="tournaments"><span class="icon">🏆</span> Tournaments</a></li>
-                <li><a href="#" data-section="settings"><span class="icon">⚙️</span> Settings</a></li>
-            </ul>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="overview">📊 Overview</a>
+                <a href="#" class="nav-item" data-section="users">👥 Users</a>
+                <a href="#" class="nav-item" data-section="withdrawals">💳 Withdrawals</a>
+                <a href="#" class="nav-item" data-section="tournaments">🏆 Tournaments</a>
+                <a href="#" class="nav-item" data-section="settings">⚙️ Settings</a>
+            </nav>
         </div>
 
         <!-- Main Content -->
         <div class="main-content">
             <!-- Header -->
             <div class="header">
-                <div class="header-left">
-                    <h1>Admin Dashboard</h1>
-                    <p>Welcome to GameLoot Management System</p>
-                </div>
-                <div class="header-right">
+                <h1 id="pageTitle">Dashboard Overview</h1>
+                <div class="header-actions">
                     <div class="admin-info">
                         <div class="admin-avatar">AD</div>
-                        <div>
-                            <div style="font-weight: bold; color: #fff;">Admin User</div>
-                            <div style="font-size: 12px; color: rgba(255, 255, 255, 0.7);">Administrator</div>
+                        <div class="admin-details">
+                            <h3>Admin User</h3>
+                            <p>Administrator</p>
                         </div>
                     </div>
                     <button id="adminLogoutBtn" class="logout-btn">Logout</button>
                 </div>
             </div>
 
-            <!-- Overview Section -->
-            <div id="overviewSection" class="content-section">
-                <!-- Stats Cards -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="icon">👥</div>
-                        <div class="number" id="totalUsers">1,234</div>
-                        <div class="label">Total Users</div>
+            <!-- Content -->
+            <div class="content">
+                <!-- Overview Section -->
+                <div id="overviewSection" class="content-section">
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-title">Total Users</div>
+                                <div class="stat-card-icon">👥</div>
+                            </div>
+                            <div class="stat-card-value" id="totalUsers">1,234</div>
+                            <div class="stat-card-change">+12% from last month</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-title">Coins Distributed</div>
+                                <div class="stat-card-icon">🪙</div>
+                            </div>
+                            <div class="stat-card-value" id="totalCoins">567,890</div>
+                            <div class="stat-card-change">+8% from last month</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-title">Pending Withdrawals</div>
+                                <div class="stat-card-icon">💳</div>
+                            </div>
+                            <div class="stat-card-value" id="pendingWithdrawals">45</div>
+                            <div class="stat-card-change">-5% from last month</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-title">Active Tournaments</div>
+                                <div class="stat-card-icon">🏆</div>
+                            </div>
+                            <div class="stat-card-value" id="activeTournaments">8</div>
+                            <div class="stat-card-change">+2 from last month</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="icon">🪙</div>
-                        <div class="number" id="totalCoins">567,890</div>
-                        <div class="label">Coins Distributed</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="icon">💳</div>
-                        <div class="number" id="pendingWithdrawals">45</div>
-                        <div class="label">Pending Withdrawals</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="icon">🏆</div>
-                        <div class="number" id="activeTournaments">8</div>
-                        <div class="label">Active Tournaments</div>
+
+                    <!-- Recent Activity -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <div class="section-title">Recent Activity</div>
+                            <button class="btn btn-secondary btn-sm">View All</button>
+                        </div>
+                        <div class="section-content">
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Time</th>
+                                            <th>User</th>
+                                            <th>Action</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>2 min ago</td>
+                                            <td>GL123456</td>
+                                            <td>Withdrawal Request</td>
+                                            <td>500 coins</td>
+                                            <td><span class="status-badge status-pending">Pending</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>5 min ago</td>
+                                            <td>GL123457</td>
+                                            <td>Tournament Entry</td>
+                                            <td>100 coins</td>
+                                            <td><span class="status-badge status-approved">Completed</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>10 min ago</td>
+                                            <td>GL123458</td>
+                                            <td>Spin & Win</td>
+                                            <td>+250 coins</td>
+                                            <td><span class="status-badge status-approved">Completed</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Recent Activity -->
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <span>📈</span>
-                            <span>Recent Activity</span>
+                <!-- Users Section -->
+                <div id="usersSection" class="content-section hidden">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <div class="section-title">User Management</div>
+                            <button id="refreshUsersBtn" class="btn btn-primary btn-sm">Refresh</button>
                         </div>
-                    </div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Time</th>
-                                    <th>User</th>
-                                    <th>Action</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2 min ago</td>
-                                    <td>GL123456</td>
-                                    <td>Withdrawal Request</td>
-                                    <td>500 coins</td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>5 min ago</td>
-                                    <td>GL123457</td>
-                                    <td>Tournament Entry</td>
-                                    <td>100 coins</td>
-                                    <td><span class="status-badge status-approved">Completed</span></td>
-                                </tr>
-                                <tr>
-                                    <td>10 min ago</td>
-                                    <td>GL123458</td>
-                                    <td>Spin & Win</td>
-                                    <td>+250 coins</td>
-                                    <td><span class="status-badge status-approved">Completed</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="section-content">
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Player ID</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Coins</th>
+                                            <th>Join Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>GL123456</td>
+                                            <td>user1@example.com</td>
+                                            <td>+1 (555) 123-4567</td>
+                                            <td>1,250</td>
+                                            <td>Jan 15, 2024</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-warning edit-coins-btn" data-user-id="GL123456">Edit</button>
+                                                <button class="btn btn-sm btn-danger reset-user-btn" data-user-id="GL123456">Reset</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>GL123457</td>
+                                            <td>user2@example.com</td>
+                                            <td>+1 (555) 123-4568</td>
+                                            <td>2,100</td>
+                                            <td>Jan 16, 2024</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-warning edit-coins-btn" data-user-id="GL123457">Edit</button>
+                                                <button class="btn btn-sm btn-danger reset-user-btn" data-user-id="GL123457">Reset</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Users Section -->
-            <div id="usersSection" class="content-section hidden">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <span>👥</span>
-                            <span>User Management</span>
+                <!-- Withdrawals Section -->
+                <div id="withdrawalsSection" class="content-section hidden">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <div class="section-title">Withdrawal Requests</div>
+                            <button id="refreshWithdrawalsBtn" class="btn btn-primary btn-sm">Refresh</button>
                         </div>
-                        <button id="refreshUsersBtn" class="btn btn-primary">Refresh Users</button>
-                    </div>
-                    <div class="table-container">
-                        <table id="usersTable">
-                            <thead>
-                                <tr>
-                                    <th>Player ID</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Coins</th>
-                                    <th>Referral Used</th>
-                                    <th>Join Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="usersTableBody">
-                                <tr>
-                                    <td>GL123456</td>
-                                    <td>user1@example.com</td>
-                                    <td>+1 (555) 123-4567</td>
-                                    <td>1,250</td>
-                                    <td>GAME789</td>
-                                    <td>Jan 15, 2024</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-warning edit-coins-btn" data-user-id="GL123456">Edit Coins</button>
-                                        <button class="btn btn-sm btn-danger reset-user-btn" data-user-id="GL123456">Reset</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>GL123457</td>
-                                    <td>user2@example.com</td>
-                                    <td>+1 (555) 123-4568</td>
-                                    <td>2,100</td>
-                                    <td>None</td>
-                                    <td>Jan 16, 2024</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-warning edit-coins-btn" data-user-id="GL123457">Edit Coins</button>
-                                        <button class="btn btn-sm btn-danger reset-user-btn" data-user-id="GL123457">Reset</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="section-content">
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Request ID</th>
+                                            <th>User ID</th>
+                                            <th>Amount</th>
+                                            <th>Method</th>
+                                            <th>Details</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>WD001</td>
+                                            <td>GL123456</td>
+                                            <td>500</td>
+                                            <td>GPay</td>
+                                            <td>user@upi</td>
+                                            <td>Jan 20, 2024</td>
+                                            <td><span class="status-badge status-pending">Pending</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-success approve-withdrawal-btn" data-withdrawal-id="WD001">Approve</button>
+                                                <button class="btn btn-sm btn-danger reject-withdrawal-btn" data-withdrawal-id="WD001">Reject</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>WD002</td>
+                                            <td>GL123457</td>
+                                            <td>1000</td>
+                                            <td>PhonePe</td>
+                                            <td>+1 (555) 123-4567</td>
+                                            <td>Jan 19, 2024</td>
+                                            <td><span class="status-badge status-approved">Approved</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-secondary" disabled>Processed</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Withdrawals Section -->
-            <div id="withdrawalsSection" class="content-section hidden">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <span>💳</span>
-                            <span>Withdrawal Requests</span>
+                <!-- Tournaments Section -->
+                <div id="tournamentsSection" class="content-section hidden">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <div class="section-title">Tournament Management</div>
+                            <button id="createTournamentBtn" class="btn btn-success btn-sm">Create Tournament</button>
                         </div>
-                        <button id="refreshWithdrawalsBtn" class="btn btn-primary">Refresh</button>
-                    </div>
-                    <div class="table-container">
-                        <table id="withdrawalsTable">
-                            <thead>
-                                <tr>
-                                    <th>Request ID</th>
-                                    <th>User ID</th>
-                                    <th>Amount</th>
-                                    <th>Method</th>
-                                    <th>Details</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="withdrawalsTableBody">
-                                <tr>
-                                    <td>WD001</td>
-                                    <td>GL123456</td>
-                                    <td>500</td>
-                                    <td>GPay</td>
-                                    <td>user@upi</td>
-                                    <td>Jan 20, 2024</td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-success approve-withdrawal-btn" data-withdrawal-id="WD001">Approve</button>
-                                        <button class="btn btn-sm btn-danger reject-withdrawal-btn" data-withdrawal-id="WD001">Reject</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>WD002</td>
-                                    <td>GL123457</td>
-                                    <td>1000</td>
-                                    <td>PhonePe</td>
-                                    <td>+1 (555) 123-4567</td>
-                                    <td>Jan 19, 2024</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-secondary" disabled>Processed</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="section-content">
+                            <!-- Tournament Creation Form -->
+                            <div id="tournamentForm" class="tournament-form hidden">
+                                <h4>Create New Tournament</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="tournamentGame">Game</label>
+                                        <select id="tournamentGame">
+                                            <option value="pubg">PUBG Mobile</option>
+                                            <option value="freefire">Free Fire</option>
+                                            <option value="codm">Call of Duty Mobile</option>
+                                            <option value="bgmi">BGMI</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tournamentEntry">Entry Fee (coins)</label>
+                                        <input type="number" id="tournamentEntry" placeholder="100">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="tournamentPrize">Prize Pool (coins)</label>
+                                        <input type="number" id="tournamentPrize" placeholder="5000">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tournamentMaxPlayers">Max Players</label>
+                                        <input type="number" id="tournamentMaxPlayers" placeholder="100">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="tournamentDate">Date</label>
+                                        <input type="date" id="tournamentDate">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tournamentTime">Time</label>
+                                        <input type="time" id="tournamentTime">
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button id="cancelTournamentBtn" class="btn btn-secondary">Cancel</button>
+                                    <button id="saveTournamentBtn" class="btn btn-success">Create Tournament</button>
+                                </div>
+                            </div>
+
+                            <!-- Tournaments Table -->
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Tournament ID</th>
+                                            <th>Game</th>
+                                            <th>Entry Fee</th>
+                                            <th>Prize Pool</th>
+                                            <th>Players</th>
+                                            <th>Date & Time</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>T001</td>
+                                            <td>PUBG Mobile</td>
+                                            <td>100</td>
+                                            <td>5,000</td>
+                                            <td>45/100</td>
+                                            <td>Jan 25, 2024 18:00</td>
+                                            <td><span class="status-badge status-pending">Active</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary edit-tournament-btn" data-tournament-id="T001">Edit</button>
+                                                <button class="btn btn-sm btn-success declare-winner-btn" data-tournament-id="T001">Winner</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>T002</td>
+                                            <td>Free Fire</td>
+                                            <td>50</td>
+                                            <td>2,000</td>
+                                            <td>30/50</td>
+                                            <td>Jan 26, 2024 20:00</td>
+                                            <td><span class="status-badge status-approved">Completed</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-secondary" disabled>Finished</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Tournaments Section -->
-            <div id="tournamentsSection" class="content-section hidden">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <span>🏆</span>
-                            <span>Tournament Management</span>
+                <!-- Settings Section -->
+                <div id="settingsSection" class="content-section hidden">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <div class="section-title">System Settings</div>
                         </div>
-                        <button id="createTournamentBtn" class="btn btn-success">Create Tournament</button>
-                    </div>
-                    
-                    <!-- Tournament Creation Form -->
-                    <div id="tournamentForm" class="tournament-form hidden">
-                        <h4>Create New Tournament</h4>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="tournamentGame">Game</label>
-                                <select id="tournamentGame">
-                                    <option value="pubg">PUBG Mobile</option>
-                                    <option value="freefire">Free Fire</option>
-                                    <option value="codm">Call of Duty Mobile</option>
-                                    <option value="bgmi">BGMI</option>
-                                    <option value="valorant">Valorant Mobile</option>
-                                </select>
+                        <div class="section-content">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="minWithdrawal">Minimum Withdrawal (coins)</label>
+                                    <input type="number" id="minWithdrawal" value="100">
+                                </div>
+                                <div class="form-group">
+                                    <label for="referralBonus">Referral Bonus (coins)</label>
+                                    <input type="number" id="referralBonus" value="100">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="tournamentEntry">Entry Fee (coins)</label>
-                                <input type="number" id="tournamentEntry" placeholder="100">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="dailyLoginBonus">Daily Login Bonus (coins)</label>
+                                    <input type="number" id="dailyLoginBonus" value="50">
+                                </div>
+                                <div class="form-group">
+                                    <label for="watchVideoReward">Watch Video Reward (coins)</label>
+                                    <input type="number" id="watchVideoReward" value="25">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="tournamentPrize">Prize Pool (coins)</label>
-                                <input type="number" id="tournamentPrize" placeholder="5000">
-                            </div>
-                            <div class="form-group">
-                                <label for="tournamentMaxPlayers">Max Players</label>
-                                <input type="number" id="tournamentMaxPlayers" placeholder="100">
+                            <div class="form-actions">
+                                <button class="btn btn-success">Save Settings</button>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="tournamentDate">Date</label>
-                                <input type="date" id="tournamentDate">
-                            </div>
-                            <div class="form-group">
-                                <label for="tournamentTime">Time</label>
-                                <input type="time" id="tournamentTime">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="tournamentDescription">Description</label>
-                            <textarea id="tournamentDescription" rows="3" placeholder="Tournament description..."></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button id="cancelTournamentBtn" class="btn btn-secondary">Cancel</button>
-                            <button id="saveTournamentBtn" class="btn btn-success">Create Tournament</button>
-                        </div>
-                    </div>
-
-                    <!-- Tournaments Table -->
-                    <div class="table-container">
-                        <table id="tournamentsTable">
-                            <thead>
-                                <tr>
-                                    <th>Tournament ID</th>
-                                    <th>Game</th>
-                                    <th>Entry Fee</th>
-                                    <th>Prize Pool</th>
-                                    <th>Players</th>
-                                    <th>Date & Time</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tournamentsTableBody">
-                                <tr>
-                                    <td>T001</td>
-                                    <td>PUBG Mobile</td>
-                                    <td>100</td>
-                                    <td>5,000</td>
-                                    <td>45/100</td>
-                                    <td>Jan 25, 2024 18:00</td>
-                                    <td><span class="status-badge status-pending">Active</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-primary edit-tournament-btn" data-tournament-id="T001">Edit</button>
-                                        <button class="btn btn-sm btn-success declare-winner-btn" data-tournament-id="T001">Declare Winner</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>T002</td>
-                                    <td>Free Fire</td>
-                                    <td>50</td>
-                                    <td>2,000</td>
-                                    <td>30/50</td>
-                                    <td>Jan 26, 2024 20:00</td>
-                                    <td><span class="status-badge status-approved">Completed</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-secondary" disabled>Finished</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Settings Section -->
-            <div id="settingsSection" class="content-section hidden">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">
-                            <span>⚙️</span>
-                            <span>System Settings</span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="minWithdrawal">Minimum Withdrawal (coins)</label>
-                            <input type="number" id="minWithdrawal" value="100">
-                        </div>
-                        <div class="form-group">
-                            <label for="referralBonus">Referral Bonus (coins)</label>
-                            <input type="number" id="referralBonus" value="100">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="dailyLoginBonus">Daily Login Bonus (coins)</label>
-                            <input type="number" id="dailyLoginBonus" value="50">
-                        </div>
-                        <div class="form-group">
-                            <label for="watchVideoReward">Watch Video Reward (coins)</label>
-                            <input type="number" id="watchVideoReward" value="25">
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <button class="btn btn-success">Save Settings</button>
                     </div>
                 </div>
             </div>
@@ -1122,13 +1093,11 @@
     </div>
 
     <!-- Modals -->
-    
-    <!-- Edit Coins Modal -->
     <div id="editCoinsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">Edit User Coins</div>
-                <span class="close" id="closeEditCoins">&times;</span>
+                <button class="close" id="closeEditCoins">&times;</button>
             </div>
             <div class="form-group">
                 <label for="editUserId">User ID</label>
@@ -1145,12 +1114,11 @@
         </div>
     </div>
 
-    <!-- Declare Winner Modal -->
     <div id="declareWinnerModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">Declare Tournament Winner</div>
-                <span class="close" id="closeDeclareWinner">&times;</span>
+                <button class="close" id="closeDeclareWinner">&times;</button>
             </div>
             <div class="form-group">
                 <label for="winnerTournamentId">Tournament ID</label>
@@ -1172,18 +1140,24 @@
     </div>
 
     <script>
-        // Firebase Configuration Management
+        // Firebase Configuration
         let firebaseConfig = null;
         let firebaseInitialized = false;
 
         // DOM Elements
-        const firebaseConfigSection = document.getElementById('firebaseConfigSection');
-        const configStatus = document.getElementById('configStatus');
+        const loginScreen = document.getElementById('loginScreen');
+        const dashboard = document.getElementById('dashboard');
+        const sidebar = document.getElementById('sidebar');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const pageTitle = document.getElementById('pageTitle');
+        
+        // Firebase config
         const configForm = document.getElementById('configForm');
+        const configStatus = document.getElementById('configStatus');
         const toggleConfigBtn = document.getElementById('toggleConfigBtn');
         const testConnectionBtn = document.getElementById('testConnectionBtn');
         const saveConfigBtn = document.getElementById('saveConfigBtn');
-        
+
         // Configuration inputs
         const apiKeyInput = document.getElementById('apiKey');
         const authDomainInput = document.getElementById('authDomain');
@@ -1192,19 +1166,13 @@
         const messagingSenderIdInput = document.getElementById('messagingSenderId');
         const appIdInput = document.getElementById('appId');
 
-        // Screen elements
-        const loginScreen = document.getElementById('loginScreen');
-        const dashboard = document.getElementById('dashboard');
-        const sidebar = document.getElementById('sidebar');
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        
         // Login elements
         const adminEmailInput = document.getElementById('adminEmail');
         const adminPasswordInput = document.getElementById('adminPassword');
         const adminLoginBtn = document.getElementById('adminLoginBtn');
         const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 
-        // Tournament form elements
+        // Tournament elements
         const createTournamentBtn = document.getElementById('createTournamentBtn');
         const tournamentForm = document.getElementById('tournamentForm');
         const cancelTournamentBtn = document.getElementById('cancelTournamentBtn');
@@ -1248,19 +1216,19 @@
             };
 
             if (!config.apiKey || !config.authDomain || !config.projectId) {
-                showNotification('Please fill in at least API Key, Auth Domain, and Project ID', 'error');
+                alert('Please fill in at least API Key, Auth Domain, and Project ID');
                 return;
             }
 
             localStorage.setItem('gameloot_admin_firebase_config', JSON.stringify(config));
             firebaseConfig = config;
             updateConfigStatus(true);
-            showNotification('Configuration saved successfully!', 'success');
+            alert('Configuration saved successfully!');
         }
 
         function testConnection() {
             if (!firebaseConfig) {
-                showNotification('Please save configuration first', 'error');
+                alert('Please save configuration first');
                 return;
             }
 
@@ -1271,7 +1239,7 @@
                 updateConfigStatus(true);
                 testConnectionBtn.textContent = 'Test';
                 testConnectionBtn.disabled = false;
-                showNotification('Connection test successful!', 'success');
+                alert('Connection successful!');
             }, 2000);
         }
 
@@ -1290,32 +1258,9 @@
             modal.style.display = 'none';
         }
 
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 15px 20px;
-                border-radius: 8px;
-                color: white;
-                font-weight: bold;
-                z-index: 10000;
-                animation: slideIn 0.3s ease;
-                background: ${type === 'success' ? '#00ff88' : type === 'error' ? '#ff4757' : '#00d4ff'};
-                color: ${type === 'success' || type === 'error' ? '#000' : '#fff'};
-            `;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-
         function checkFirebaseConnection() {
             if (!firebaseInitialized) {
-                showNotification('Please configure Firebase first', 'error');
+                alert('Please configure Firebase first');
                 return false;
             }
             return true;
@@ -1330,11 +1275,21 @@
             // Show selected section
             document.getElementById(sectionName + 'Section').classList.remove('hidden');
             
-            // Update active menu item
-            document.querySelectorAll('.sidebar-menu a').forEach(link => {
-                link.classList.remove('active');
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
             });
             document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+            
+            // Update page title
+            const titles = {
+                overview: 'Dashboard Overview',
+                users: 'User Management',
+                withdrawals: 'Withdrawal Requests',
+                tournaments: 'Tournament Management',
+                settings: 'System Settings'
+            };
+            pageTitle.textContent = titles[sectionName] || 'Dashboard';
         }
 
         // Event Listeners
@@ -1348,10 +1303,10 @@
         });
 
         // Sidebar navigation
-        document.querySelectorAll('.sidebar-menu a').forEach(link => {
-            link.addEventListener('click', (e) => {
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
                 e.preventDefault();
-                const section = link.getAttribute('data-section');
+                const section = item.getAttribute('data-section');
                 switchSection(section);
                 
                 // Close mobile menu
@@ -1361,7 +1316,7 @@
             });
         });
 
-        // Admin login handler
+        // Admin login
         adminLoginBtn.addEventListener('click', () => {
             if (!checkFirebaseConnection()) return;
             
@@ -1369,26 +1324,24 @@
             const password = adminPasswordInput.value.trim();
             
             if (!email || !password) {
-                showNotification('Please enter both email and password', 'error');
+                alert('Please enter both email and password');
                 return;
             }
             
-            // Firebase authentication would go here
             loginScreen.style.display = 'none';
             dashboard.style.display = 'block';
-            showNotification('Welcome to GameLoot Admin Panel!', 'success');
+            alert('Welcome to GameLoot Admin Panel!');
         });
 
-        // Admin logout handler
+        // Admin logout
         adminLogoutBtn.addEventListener('click', () => {
             dashboard.style.display = 'none';
             loginScreen.style.display = 'flex';
             adminEmailInput.value = '';
             adminPasswordInput.value = '';
-            showNotification('Logged out successfully', 'success');
         });
 
-        // Tournament form toggle
+        // Tournament form
         createTournamentBtn.addEventListener('click', () => {
             tournamentForm.classList.remove('hidden');
             createTournamentBtn.style.display = 'none';
@@ -1400,16 +1353,16 @@
         });
 
         saveTournamentBtn.addEventListener('click', () => {
-            showNotification('Tournament created successfully!', 'success');
+            alert('Tournament created successfully!');
             tournamentForm.classList.add('hidden');
             createTournamentBtn.style.display = 'block';
         });
 
-        // Modal close handlers
+        // Modal handlers
         document.getElementById('closeEditCoins').addEventListener('click', () => hideModal(editCoinsModal));
         document.getElementById('closeDeclareWinner').addEventListener('click', () => hideModal(declareWinnerModal));
 
-        // Table action handlers (using event delegation)
+        // Table actions
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('edit-coins-btn')) {
                 const userId = e.target.dataset.userId;
@@ -1425,12 +1378,12 @@
 
             if (e.target.classList.contains('approve-withdrawal-btn')) {
                 const withdrawalId = e.target.dataset.withdrawalId;
-                showNotification(`Withdrawal ${withdrawalId} approved!`, 'success');
+                alert(`Withdrawal ${withdrawalId} approved successfully!`);
             }
 
             if (e.target.classList.contains('reject-withdrawal-btn')) {
                 const withdrawalId = e.target.dataset.withdrawalId;
-                showNotification(`Withdrawal ${withdrawalId} rejected!`, 'error');
+                alert(`Withdrawal ${withdrawalId} rejected!`);
             }
         });
 
@@ -1438,12 +1391,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadSavedConfig();
             
-            // For demo purposes - remove when Firebase is integrated
+            // For demo - remove when Firebase is integrated
             // dashboard.style.display = 'block';
             // loginScreen.style.display = 'none';
         });
 
-        // Export functions for external use
+        // Export functions
         window.getFirebaseConfig = () => firebaseConfig;
         window.isFirebaseInitialized = () => firebaseInitialized;
         window.showDashboard = () => {
