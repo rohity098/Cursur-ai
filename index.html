@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameLoot - Earn & Win</title>
+    <title>GameLoot - Gaming Rewards Platform</title>
     <style>
         * {
             margin: 0;
@@ -12,128 +12,160 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
         }
 
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Firebase Config Section */
+        /* Firebase Configuration */
         .firebase-config {
-            background: rgba(255,255,255,0.95);
-            border-radius: 15px;
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px;
             margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .config-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
-        .config-header h2 {
-            font-size: 18px;
-            color: #667eea;
+        .config-header h3 {
+            font-size: 14px;
+            color: #00d4ff;
             margin: 0;
         }
 
         .config-status {
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
             font-weight: bold;
         }
 
         .config-status.connected {
-            background: #d4edda;
-            color: #155724;
+            background: #00ff88;
+            color: #000;
         }
 
         .config-status.disconnected {
-            background: #f8d7da;
-            color: #721c24;
+            background: #ff4757;
+            color: #fff;
         }
 
         .config-form {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .config-form.show {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
         }
 
         .config-form input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 6px;
+            color: #fff;
+            font-size: 11px;
         }
 
-        .config-form label {
-            font-size: 12px;
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 3px;
+        .config-form input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .config-actions {
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
+            gap: 5px;
         }
 
-        .config-actions .btn {
+        .config-btn {
             flex: 1;
-            padding: 8px 12px;
-            font-size: 12px;
-            margin-bottom: 0;
+            padding: 6px 8px;
+            border: none;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
+        .config-btn.primary {
+            background: #00d4ff;
+            color: #000;
         }
 
-        .btn-secondary:hover {
-            background: #545b62;
+        .config-btn.success {
+            background: #00ff88;
+            color: #000;
         }
 
-        .btn-success {
-            background: #28a745;
-            color: white;
+        .config-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
         }
 
-        .btn-success:hover {
-            background: #1e7e34;
+        /* Login Screen */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
         }
 
-        /* Login Page Styles */
         .login-container {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
             text-align: center;
         }
 
-        .logo {
-            font-size: 32px;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 10px;
+        .app-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-        .tagline {
-            color: #666;
+        .app-logo .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .app-logo .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-tagline {
+            color: rgba(255, 255, 255, 0.7);
             margin-bottom: 30px;
             font-size: 14px;
         }
@@ -150,69 +182,81 @@
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-weight: 500;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: #fff;
             font-size: 16px;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .btn {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
             margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover:before {
+            left: 100%;
         }
 
         .btn-primary {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #5a6fd8;
-            transform: translateY(-2px);
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            color: #000;
         }
 
         .btn-google {
-            background: #db4437;
-            color: white;
-        }
-
-        .btn-google:hover {
-            background: #c23321;
+            background: linear-gradient(45deg, #db4437, #cc3333);
+            color: #fff;
         }
 
         .btn-phone {
-            background: #25d366;
-            color: white;
-        }
-
-        .btn-phone:hover {
-            background: #20ba5a;
+            background: linear-gradient(45deg, #00ff88, #00cc66);
+            color: #000;
         }
 
         .divider {
             margin: 20px 0;
-            text-align: center;
-            color: #666;
             position: relative;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .divider::before {
@@ -222,90 +266,183 @@
             left: 0;
             right: 0;
             height: 1px;
-            background: #e0e0e0;
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .divider span {
-            background: white;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             padding: 0 15px;
         }
 
-        /* Dashboard Styles */
+        /* Dashboard */
         .dashboard {
             display: none;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
         }
 
+        /* Header */
         .header {
-            background: rgba(255,255,255,0.1);
+            background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .welcome-text {
-            color: white;
-            font-size: 18px;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
+            color: #000;
+        }
+
+        .header-info h3 {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .header-info p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .coin-display {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .coin-display .coin-icon {
+            color: #ffd700;
+            font-size: 16px;
+        }
+
+        .coin-display .coin-amount {
+            font-weight: bold;
+            color: #ffd700;
         }
 
         .logout-btn {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #fff;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
+            transition: all 0.3s;
         }
 
         .logout-btn:hover {
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.2);
         }
 
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+        }
+
+        /* Balance Card */
         .balance-card {
             background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-            border-radius: 15px;
+            border-radius: 20px;
             padding: 25px;
+            margin-bottom: 25px;
             text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            color: #000;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
         }
 
-        .balance-amount {
+        .balance-card .balance-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .balance-card .balance-amount {
             font-size: 36px;
             font-weight: bold;
-            color: #333;
             margin-bottom: 5px;
         }
 
-        .balance-label {
-            color: #666;
+        .balance-card .balance-label {
             font-size: 14px;
+            opacity: 0.8;
         }
 
-        .earning-options {
+        /* Earning Options */
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .earning-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .earning-card {
-            background: white;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
         .earning-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.2);
+            border-color: #00d4ff;
+        }
+
+        .earning-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .earning-card:hover::before {
+            left: 100%;
         }
 
         .earning-card.full-width {
@@ -315,36 +452,78 @@
         .earning-icon {
             font-size: 32px;
             margin-bottom: 10px;
+            background: linear-gradient(45deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .earning-title {
+            font-size: 16px;
             font-weight: bold;
-            color: #333;
             margin-bottom: 5px;
+            color: #fff;
         }
 
         .earning-subtitle {
             font-size: 12px;
-            color: #666;
+            color: rgba(255, 255, 255, 0.7);
         }
 
+        .earning-reward {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #00ff88, #00cc66);
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* Referral Section */
         .referral-section {
-            background: white;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .referral-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
         .referral-code {
-            background: #f0f0f0;
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
             padding: 15px;
-            border-radius: 10px;
             text-align: center;
             margin-bottom: 15px;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             font-size: 18px;
             font-weight: bold;
-            color: #667eea;
+            color: #00d4ff;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0, 212, 255, 0.3);
+            border: none;
+            border-radius: 6px;
+            padding: 5px 8px;
+            color: #00d4ff;
+            cursor: pointer;
+            font-size: 10px;
         }
 
         .referral-input {
@@ -355,85 +534,39 @@
 
         .referral-input input {
             flex: 1;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
+            color: #fff;
         }
 
         .referral-input button {
-            padding: 10px 20px;
-            background: #667eea;
-            color: white;
+            padding: 12px 20px;
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            color: #000;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-        }
-
-        .spin-wheel {
-            width: 200px;
-            height: 200px;
-            border: 10px solid #667eea;
-            border-radius: 50%;
-            margin: 20px auto;
-            position: relative;
-            background: conic-gradient(
-                #ff6b6b 0deg 60deg,
-                #4ecdc4 60deg 120deg,
-                #45b7d1 120deg 180deg,
-                #96ceb4 180deg 240deg,
-                #ffeaa7 240deg 300deg,
-                #dda0dd 300deg 360deg
-            );
-        }
-
-        .spin-pointer {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 20px solid #333;
-        }
-
-        .spin-btn {
-            display: block;
-            margin: 20px auto;
-            padding: 15px 30px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
             font-weight: bold;
-            cursor: pointer;
         }
 
-        .spin-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        .cooldown-timer {
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-        }
-
+        /* Profile Section */
         .profile-section {
-            background: white;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .profile-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #f0f0f0;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .profile-item:last-child {
@@ -441,92 +574,77 @@
         }
 
         .profile-label {
-            font-weight: bold;
-            color: #555;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .profile-value {
-            color: #333;
+            font-weight: bold;
+            color: #fff;
         }
 
+        /* Withdraw Button */
         .withdraw-btn {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            padding: 18px;
+            background: linear-gradient(45deg, #00ff88, #00cc66);
+            color: #000;
             border: none;
-            border-radius: 15px;
+            border-radius: 16px;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             margin-bottom: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
         }
 
         .withdraw-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.4);
         }
 
-        .tournament-list {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
         }
 
-        .tournament-item {
-            padding: 15px;
-            border: 2px solid #f0f0f0;
-            border-radius: 10px;
-            margin-bottom: 10px;
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: rgba(255, 255, 255, 0.6);
             cursor: pointer;
-            transition: border-color 0.3s;
-        }
-
-        .tournament-item:hover {
-            border-color: #667eea;
-        }
-
-        .tournament-name {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .tournament-details {
-            font-size: 12px;
-            color: #666;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .social-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .social-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
+            transition: all 0.3s;
+            padding: 5px 10px;
             border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
         }
 
-        .instagram-btn {
-            background: #e4405f;
-            color: white;
+        .nav-item.active {
+            color: #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
         }
 
-        .youtube-btn {
-            background: #ff0000;
-            color: white;
+        .nav-item:hover {
+            color: #00d4ff;
         }
 
-        .hidden {
-            display: none;
+        .nav-item .nav-icon {
+            font-size: 20px;
+        }
+
+        .nav-item .nav-label {
+            font-size: 10px;
         }
 
         /* Modal Styles */
@@ -538,237 +656,450 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
-            background-color: white;
-            margin: 15% auto;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 10% auto;
             padding: 20px;
-            border-radius: 15px;
+            border-radius: 20px;
             width: 90%;
             max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
         }
 
         .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 24px;
             font-weight: bold;
             cursor: pointer;
+            transition: color 0.3s;
         }
 
         .close:hover {
-            color: black;
+            color: #fff;
+        }
+
+        /* Spinner Wheel */
+        .spin-wheel {
+            width: 250px;
+            height: 250px;
+            border: 8px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin: 20px auto;
+            position: relative;
+            background: conic-gradient(
+                #ff6b6b 0deg 60deg,
+                #4ecdc4 60deg 120deg,
+                #45b7d1 120deg 180deg,
+                #96ceb4 180deg 240deg,
+                #ffeaa7 240deg 300deg,
+                #dda0dd 300deg 360deg
+            );
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .spin-pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 30px solid #00d4ff;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+        }
+
+        .spin-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            color: #000;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .spin-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.4);
+        }
+
+        .spin-btn:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Tournament List */
+        .tournament-list {
+            margin-top: 20px;
+        }
+
+        .tournament-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tournament-item:hover {
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .tournament-name {
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .tournament-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .tournament-prize {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        /* Social Buttons */
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .instagram-btn {
+            background: linear-gradient(45deg, #e4405f, #c13584);
+            color: white;
+        }
+
+        .youtube-btn {
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 15px;
+                padding-bottom: 80px;
+            }
+            
+            .earning-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                padding: 10px 15px;
+            }
+            
+            .modal-content {
+                margin: 5% auto;
+                width: 95%;
+            }
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Firebase Configuration Section -->
-        <div id="firebaseConfigSection" class="firebase-config">
-            <div class="config-header">
-                <h2>🔧 Firebase Setup</h2>
-                <div class="config-status disconnected" id="configStatus">Disconnected</div>
-            </div>
-            
-            <div class="config-form hidden" id="configForm">
-                <div class="form-group">
-                    <label for="apiKey">API Key</label>
-                    <input type="text" id="apiKey" placeholder="Enter Firebase API Key">
-                </div>
-                <div class="form-group">
-                    <label for="authDomain">Auth Domain</label>
-                    <input type="text" id="authDomain" placeholder="your-project.firebaseapp.com">
-                </div>
-                <div class="form-group">
-                    <label for="projectId">Project ID</label>
-                    <input type="text" id="projectId" placeholder="your-project-id">
-                </div>
-                <div class="form-group">
-                    <label for="storageBucket">Storage Bucket</label>
-                    <input type="text" id="storageBucket" placeholder="your-project.appspot.com">
-                </div>
-                <div class="form-group">
-                    <label for="messagingSenderId">Messaging Sender ID</label>
-                    <input type="text" id="messagingSenderId" placeholder="123456789">
-                </div>
-                <div class="form-group">
-                    <label for="appId">App ID</label>
-                    <input type="text" id="appId" placeholder="1:123456789:web:abcdef">
-                </div>
-            </div>
-            
-            <div class="config-actions">
-                <button id="toggleConfigBtn" class="btn btn-secondary">Show Configuration</button>
-                <button id="testConnectionBtn" class="btn btn-primary">Test Connection</button>
-                <button id="saveConfigBtn" class="btn btn-success">Save Configuration</button>
-            </div>
+    <!-- Firebase Configuration -->
+    <div id="firebaseConfigSection" class="firebase-config">
+        <div class="config-header">
+            <h3>⚙️ Firebase Configuration</h3>
+            <div class="config-status disconnected" id="configStatus">Disconnected</div>
         </div>
+        
+        <div class="config-form" id="configForm">
+            <input type="text" id="apiKey" placeholder="API Key">
+            <input type="text" id="authDomain" placeholder="Auth Domain">
+            <input type="text" id="projectId" placeholder="Project ID">
+            <input type="text" id="storageBucket" placeholder="Storage Bucket">
+            <input type="text" id="messagingSenderId" placeholder="Messaging Sender ID">
+            <input type="text" id="appId" placeholder="App ID">
+        </div>
+        
+        <div class="config-actions">
+            <button id="toggleConfigBtn" class="config-btn secondary">Show</button>
+            <button id="testConnectionBtn" class="config-btn primary">Test</button>
+            <button id="saveConfigBtn" class="config-btn success">Save</button>
+        </div>
+    </div>
 
-        <!-- Login Page -->
-        <div id="loginPage" class="login-container">
-            <div class="logo">🎮 GameLoot</div>
-            <div class="tagline">Earn coins by playing games!</div>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="app-logo">
+                <div class="logo-icon">🎮</div>
+                <div class="logo-text">GameLoot</div>
+            </div>
+            <div class="login-tagline">Professional Gaming Rewards Platform</div>
             
             <!-- Email/Password Login -->
             <div id="emailLoginForm" class="login-form">
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email">Email Address</label>
                     <input type="email" id="email" placeholder="Enter your email">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" placeholder="Enter your password">
                 </div>
-                <button id="loginBtn" class="btn btn-primary">Login</button>
-                <button id="signupBtn" class="btn btn-primary">Sign Up</button>
+                <button id="loginBtn" class="btn btn-primary">Sign In</button>
+                <button id="signupBtn" class="btn btn-primary">Create Account</button>
             </div>
 
             <div class="divider">
-                <span>OR</span>
+                <span>OR CONTINUE WITH</span>
             </div>
 
             <!-- Social Login Buttons -->
-            <button id="googleLoginBtn" class="btn btn-google">🔍 Continue with Google</button>
-            <button id="phoneLoginBtn" class="btn btn-phone">📱 Login with Phone</button>
+            <button id="googleLoginBtn" class="btn btn-google">🔍 Google Account</button>
+            <button id="phoneLoginBtn" class="btn btn-phone">📱 Phone Number</button>
         </div>
+    </div>
 
-        <!-- Phone Login Form (Hidden by default) -->
-        <div id="phoneLoginForm" class="login-container hidden">
-            <div class="logo">🎮 GameLoot</div>
-            <div class="tagline">Login with your phone number</div>
+    <!-- Phone Login Form -->
+    <div id="phoneLoginForm" class="login-screen hidden">
+        <div class="login-container">
+            <div class="app-logo">
+                <div class="logo-icon">📱</div>
+                <div class="logo-text">Phone Login</div>
+            </div>
+            <div class="login-tagline">Enter your phone number to continue</div>
             
             <div class="form-group">
                 <label for="phoneNumber">Phone Number</label>
-                <input type="tel" id="phoneNumber" placeholder="+1234567890">
+                <input type="tel" id="phoneNumber" placeholder="+1 (555) 123-4567">
             </div>
             <button id="sendOtpBtn" class="btn btn-primary">Send OTP</button>
             
             <div id="otpSection" class="hidden">
                 <div class="form-group">
-                    <label for="otpCode">Enter OTP</label>
-                    <input type="text" id="otpCode" placeholder="123456">
+                    <label for="otpCode">Verification Code</label>
+                    <input type="text" id="otpCode" placeholder="Enter 6-digit code">
                 </div>
-                <button id="verifyOtpBtn" class="btn btn-primary">Verify OTP</button>
+                <button id="verifyOtpBtn" class="btn btn-primary">Verify & Continue</button>
             </div>
             
-            <button id="backToLoginBtn" class="btn" style="background: #666; color: white; margin-top: 10px;">Back to Login</button>
+            <button id="backToLoginBtn" class="btn btn-secondary">← Back to Login</button>
         </div>
+    </div>
 
-        <!-- Dashboard -->
-        <div id="dashboard" class="dashboard">
-            <!-- Header -->
-            <div class="header">
-                <div class="welcome-text">Welcome, <span id="userName">User</span>!</div>
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="header-avatar" id="userAvatar">GL</div>
+                <div class="header-info">
+                    <h3 id="userName">GameLoot User</h3>
+                    <p id="userLevel">Level 1 • Rookie</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="coin-display">
+                    <span class="coin-icon">🪙</span>
+                    <span class="coin-amount" id="coinBalance">1,250</span>
+                </div>
                 <button id="logoutBtn" class="logout-btn">Logout</button>
             </div>
+        </div>
 
-            <!-- Coin Balance -->
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Balance Card -->
             <div class="balance-card">
-                <div class="balance-amount" id="coinBalance">1,250</div>
-                <div class="balance-label">GameLoot Coins</div>
+                <div class="balance-icon">💰</div>
+                <div class="balance-amount" id="totalBalance">1,250</div>
+                <div class="balance-label">Total GameLoot Coins</div>
             </div>
 
             <!-- Earning Options -->
-            <div class="earning-options">
+            <div class="section-title">
+                <span>🎯</span>
+                <span>Earning Opportunities</span>
+            </div>
+            
+            <div class="earning-grid">
                 <div class="earning-card" id="watchEarnCard">
-                    <div class="earning-icon">👀</div>
+                    <div class="earning-reward">+50</div>
+                    <div class="earning-icon">👁️</div>
                     <div class="earning-title">Watch & Earn</div>
-                    <div class="earning-subtitle">+50 coins per video</div>
+                    <div class="earning-subtitle">Watch ads & videos</div>
                 </div>
 
                 <div class="earning-card" id="loginEarnCard">
+                    <div class="earning-reward">+100</div>
                     <div class="earning-icon">📅</div>
-                    <div class="earning-title">Login & Earn</div>
-                    <div class="earning-subtitle">Daily bonus</div>
+                    <div class="earning-title">Daily Login</div>
+                    <div class="earning-subtitle">Login bonus</div>
                 </div>
 
                 <div class="earning-card" id="followEarnCard">
+                    <div class="earning-reward">+25</div>
                     <div class="earning-icon">👥</div>
                     <div class="earning-title">Follow & Earn</div>
                     <div class="earning-subtitle">Social media</div>
                 </div>
 
                 <div class="earning-card" id="spinWinCard">
+                    <div class="earning-reward">+500</div>
                     <div class="earning-icon">🎰</div>
                     <div class="earning-title">Spin & Win</div>
                     <div class="earning-subtitle">Lucky wheel</div>
                 </div>
 
                 <div class="earning-card full-width" id="tournamentCard">
+                    <div class="earning-reward">+5000</div>
                     <div class="earning-icon">🏆</div>
                     <div class="earning-title">Join Tournament</div>
-                    <div class="earning-subtitle">Compete with others</div>
+                    <div class="earning-subtitle">Compete with players worldwide</div>
                 </div>
             </div>
 
             <!-- Referral Section -->
+            <div class="section-title">
+                <span>🤝</span>
+                <span>Referral Program</span>
+            </div>
+            
             <div class="referral-section">
-                <h3>Referral & Earn</h3>
-                <div class="referral-code" id="userReferralCode">GAME123XYZ</div>
+                <div class="referral-code" id="userReferralCode">
+                    GAME123XYZ
+                    <button class="copy-btn" id="copyReferralBtn">Copy</button>
+                </div>
                 <div class="referral-input">
-                    <input type="text" id="referralInput" placeholder="Enter referral code">
+                    <input type="text" id="referralInput" placeholder="Enter friend's referral code">
                     <button id="applyReferralBtn">Apply</button>
                 </div>
-                <div style="font-size: 12px; color: #666; text-align: center;">
-                    Share your code and earn 100 coins per referral!
+                <div style="font-size: 12px; color: rgba(255, 255, 255, 0.7); text-align: center; margin-top: 10px;">
+                    Earn 100 coins for each successful referral!
                 </div>
             </div>
 
-            <!-- User Profile -->
+            <!-- Profile Section -->
+            <div class="section-title">
+                <span>👤</span>
+                <span>Profile Information</span>
+            </div>
+            
             <div class="profile-section">
-                <h3>Profile</h3>
                 <div class="profile-item">
-                    <span class="profile-label">Player ID:</span>
+                    <span class="profile-label">Player ID</span>
                     <span class="profile-value" id="playerId">GL123456</span>
                 </div>
                 <div class="profile-item">
-                    <span class="profile-label">Email:</span>
+                    <span class="profile-label">Email</span>
                     <span class="profile-value" id="userEmail">user@example.com</span>
                 </div>
                 <div class="profile-item">
-                    <span class="profile-label">Phone:</span>
-                    <span class="profile-value" id="userPhone">+1234567890</span>
+                    <span class="profile-label">Phone</span>
+                    <span class="profile-value" id="userPhone">+1 (555) 123-4567</span>
                 </div>
                 <div class="profile-item">
-                    <span class="profile-label">Referral Used:</span>
+                    <span class="profile-label">Referral Used</span>
                     <span class="profile-value" id="referralUsed">None</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">Member Since</span>
+                    <span class="profile-value" id="memberSince">Jan 2024</span>
                 </div>
             </div>
 
             <!-- Withdraw Button -->
-            <button id="withdrawBtn" class="withdraw-btn">💰 Withdraw Coins</button>
+            <button id="withdrawBtn" class="withdraw-btn">💳 Withdraw Coins</button>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">🎮</div>
+                <div class="nav-label">Games</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">🏆</div>
+                <div class="nav-label">Tournaments</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">💰</div>
+                <div class="nav-label">Wallet</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">👤</div>
+                <div class="nav-label">Profile</div>
+            </div>
         </div>
     </div>
 
+    <!-- Modals -->
+    
     <!-- Spin & Win Modal -->
     <div id="spinModal" class="modal">
         <div class="modal-content">
-            <span class="close" id="closeSpin">&times;</span>
-            <h2>Spin & Win</h2>
+            <div class="modal-header">
+                <div class="modal-title">🎰 Spin & Win</div>
+                <span class="close" id="closeSpin">&times;</span>
+            </div>
             <div class="spin-wheel" id="spinWheel">
                 <div class="spin-pointer"></div>
             </div>
-            <button id="spinButton" class="spin-btn">SPIN!</button>
-            <div id="spinCooldown" class="cooldown-timer hidden">
+            <button id="spinButton" class="spin-btn">SPIN NOW!</button>
+            <div id="spinCooldown" class="hidden" style="text-align: center; color: rgba(255, 255, 255, 0.7); font-size: 14px;">
                 Next spin available in: <span id="cooldownTime">24:00:00</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Follow & Earn Modal -->
-    <div id="followModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeFollow">&times;</span>
-            <h2>Follow & Earn</h2>
-            <p>Follow our social media accounts to earn coins!</p>
-            <div class="social-buttons">
-                <button id="followInstagram" class="social-btn instagram-btn">📷 Instagram</button>
-                <button id="followYoutube" class="social-btn youtube-btn">📺 YouTube</button>
-            </div>
-            <div style="margin-top: 15px; font-size: 12px; color: #666; text-align: center;">
-                Earn 25 coins for each follow!
             </div>
         </div>
     </div>
@@ -776,24 +1107,52 @@
     <!-- Tournament Modal -->
     <div id="tournamentModal" class="modal">
         <div class="modal-content">
-            <span class="close" id="closeTournament">&times;</span>
-            <h2>Active Tournaments</h2>
+            <div class="modal-header">
+                <div class="modal-title">🏆 Active Tournaments</div>
+                <span class="close" id="closeTournament">&times;</span>
+            </div>
             <div class="tournament-list" id="tournamentList">
-                <!-- Tournament items will be populated by JavaScript -->
                 <div class="tournament-item">
-                    <div class="tournament-name">PUBG Mobile Championship</div>
+                    <div class="tournament-name">🔫 PUBG Mobile Championship</div>
                     <div class="tournament-details">
                         <span>Entry: 100 coins</span>
-                        <span>Prize: 5000 coins</span>
+                        <span class="tournament-prize">Prize: 5,000 coins</span>
                     </div>
                 </div>
                 <div class="tournament-item">
-                    <div class="tournament-name">Free Fire Battle</div>
+                    <div class="tournament-name">🔥 Free Fire Battle Royale</div>
                     <div class="tournament-details">
                         <span>Entry: 50 coins</span>
-                        <span>Prize: 2000 coins</span>
+                        <span class="tournament-prize">Prize: 2,000 coins</span>
                     </div>
                 </div>
+                <div class="tournament-item">
+                    <div class="tournament-name">⚔️ Call of Duty Mobile</div>
+                    <div class="tournament-details">
+                        <span>Entry: 150 coins</span>
+                        <span class="tournament-prize">Prize: 10,000 coins</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Follow & Earn Modal -->
+    <div id="followModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">👥 Follow & Earn</div>
+                <span class="close" id="closeFollow">&times;</span>
+            </div>
+            <p style="margin-bottom: 20px; color: rgba(255, 255, 255, 0.8);">
+                Follow our social media accounts to earn coins instantly!
+            </p>
+            <div class="social-buttons">
+                <button id="followInstagram" class="social-btn instagram-btn">📷 Instagram</button>
+                <button id="followYoutube" class="social-btn youtube-btn">📺 YouTube</button>
+            </div>
+            <div style="margin-top: 15px; font-size: 12px; color: rgba(255, 255, 255, 0.6); text-align: center;">
+                Earn 25 coins for each platform you follow!
             </div>
         </div>
     </div>
@@ -801,12 +1160,14 @@
     <!-- Watch & Earn Modal -->
     <div id="watchModal" class="modal">
         <div class="modal-content">
-            <span class="close" id="closeWatch">&times;</span>
-            <h2>Watch & Earn</h2>
+            <div class="modal-header">
+                <div class="modal-title">👁️ Watch & Earn</div>
+                <span class="close" id="closeWatch">&times;</span>
+            </div>
             <div id="videoContainer" style="text-align: center; margin: 20px 0;">
-                <div style="background: #f0f0f0; padding: 40px; border-radius: 10px;">
-                    📺 Video Player Area
-                    <br><br>
+                <div style="background: rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 12px; border: 2px dashed rgba(255, 255, 255, 0.3);">
+                    <div style="font-size: 48px; margin-bottom: 15px;">📺</div>
+                    <div style="margin-bottom: 20px; color: rgba(255, 255, 255, 0.8);">Video Advertisement</div>
                     <button id="watchVideoBtn" class="btn btn-primary">Watch Video (+50 coins)</button>
                 </div>
             </div>
@@ -816,17 +1177,20 @@
     <!-- Withdraw Modal -->
     <div id="withdrawModal" class="modal">
         <div class="modal-content">
-            <span class="close" id="closeWithdraw">&times;</span>
-            <h2>Withdraw Coins</h2>
+            <div class="modal-header">
+                <div class="modal-title">💳 Withdraw Coins</div>
+                <span class="close" id="closeWithdraw">&times;</span>
+            </div>
             <div class="form-group">
                 <label for="withdrawAmount">Amount (coins)</label>
-                <input type="number" id="withdrawAmount" placeholder="Enter amount" min="100">
+                <input type="number" id="withdrawAmount" placeholder="Minimum 100 coins" min="100">
             </div>
             <div class="form-group">
                 <label for="withdrawMethod">Payment Method</label>
-                <select id="withdrawMethod" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                <select id="withdrawMethod" style="width: 100%; padding: 15px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: #fff; font-size: 16px;">
                     <option value="gpay">Google Pay</option>
                     <option value="phonepe">PhonePe</option>
+                    <option value="paytm">Paytm</option>
                     <option value="playstore">Play Store Credits</option>
                 </select>
             </div>
@@ -838,19 +1202,12 @@
         </div>
     </div>
 
-    <!-- Firebase SDK will be initialized externally -->
-    <!-- JavaScript hooks for Firebase integration -->
     <script>
         // Firebase Configuration Management
         let firebaseConfig = null;
         let firebaseInitialized = false;
 
-        // DOM Elements - Ready for Firebase integration
-        const loginPage = document.getElementById('loginPage');
-        const phoneLoginForm = document.getElementById('phoneLoginForm');
-        const dashboard = document.getElementById('dashboard');
-        
-        // Firebase config elements
+        // DOM Elements
         const firebaseConfigSection = document.getElementById('firebaseConfigSection');
         const configStatus = document.getElementById('configStatus');
         const configForm = document.getElementById('configForm');
@@ -865,6 +1222,11 @@
         const storageBucketInput = document.getElementById('storageBucket');
         const messagingSenderIdInput = document.getElementById('messagingSenderId');
         const appIdInput = document.getElementById('appId');
+
+        // Screen elements
+        const loginScreen = document.getElementById('loginScreen');
+        const phoneLoginForm = document.getElementById('phoneLoginForm');
+        const dashboard = document.getElementById('dashboard');
         
         // Login elements
         const emailInput = document.getElementById('email');
@@ -875,51 +1237,29 @@
         const phoneLoginBtn = document.getElementById('phoneLoginBtn');
         const backToLoginBtn = document.getElementById('backToLoginBtn');
         
-        // Phone login elements
-        const phoneNumberInput = document.getElementById('phoneNumber');
-        const sendOtpBtn = document.getElementById('sendOtpBtn');
-        const otpSection = document.getElementById('otpSection');
-        const otpCodeInput = document.getElementById('otpCode');
-        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
-        
         // Dashboard elements
         const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
         const logoutBtn = document.getElementById('logoutBtn');
         const coinBalance = document.getElementById('coinBalance');
-        const playerId = document.getElementById('playerId');
-        const userEmail = document.getElementById('userEmail');
-        const userPhone = document.getElementById('userPhone');
-        const referralUsed = document.getElementById('referralUsed');
-        const userReferralCode = document.getElementById('userReferralCode');
-        
-        // Earning cards
-        const watchEarnCard = document.getElementById('watchEarnCard');
-        const loginEarnCard = document.getElementById('loginEarnCard');
-        const followEarnCard = document.getElementById('followEarnCard');
-        const spinWinCard = document.getElementById('spinWinCard');
-        const tournamentCard = document.getElementById('tournamentCard');
+        const totalBalance = document.getElementById('totalBalance');
         
         // Modals
         const spinModal = document.getElementById('spinModal');
-        const followModal = document.getElementById('followModal');
         const tournamentModal = document.getElementById('tournamentModal');
+        const followModal = document.getElementById('followModal');
         const watchModal = document.getElementById('watchModal');
         const withdrawModal = document.getElementById('withdrawModal');
-        
-        // Buttons
-        const withdrawBtn = document.getElementById('withdrawBtn');
-        const applyReferralBtn = document.getElementById('applyReferralBtn');
-        const referralInput = document.getElementById('referralInput');
-        
+
         // Firebase Configuration Functions
         function toggleConfigForm() {
-            const isHidden = configForm.classList.contains('hidden');
-            configForm.classList.toggle('hidden');
-            toggleConfigBtn.textContent = isHidden ? 'Hide Config' : 'Show Config';
+            const isShowing = configForm.classList.contains('show');
+            configForm.classList.toggle('show');
+            toggleConfigBtn.textContent = isShowing ? 'Show' : 'Hide';
         }
 
         function loadSavedConfig() {
-            const savedConfig = localStorage.getItem('gameloot_user_firebase_config');
+            const savedConfig = localStorage.getItem('gameloot_firebase_config');
             if (savedConfig) {
                 const config = JSON.parse(savedConfig);
                 apiKeyInput.value = config.apiKey || '';
@@ -944,35 +1284,31 @@
                 appId: appIdInput.value.trim()
             };
 
-            // Validate required fields
             if (!config.apiKey || !config.authDomain || !config.projectId) {
                 alert('Please fill in at least API Key, Auth Domain, and Project ID');
                 return;
             }
 
-            localStorage.setItem('gameloot_user_firebase_config', JSON.stringify(config));
+            localStorage.setItem('gameloot_firebase_config', JSON.stringify(config));
             firebaseConfig = config;
             updateConfigStatus(true);
-            alert('Configuration saved successfully!');
+            showNotification('Configuration saved successfully!', 'success');
         }
 
         function testConnection() {
             if (!firebaseConfig) {
-                alert('Please save configuration first');
+                showNotification('Please save configuration first', 'error');
                 return;
             }
 
-            // This would be where you actually test the Firebase connection
-            // For now, we'll simulate a test
             testConnectionBtn.textContent = 'Testing...';
             testConnectionBtn.disabled = true;
 
             setTimeout(() => {
-                // Simulate successful connection
                 updateConfigStatus(true);
-                testConnectionBtn.textContent = 'Test Connection';
+                testConnectionBtn.textContent = 'Test';
                 testConnectionBtn.disabled = false;
-                alert('Connection test successful! You can now login.');
+                showNotification('Connection test successful!', 'success');
             }, 2000);
         }
 
@@ -982,89 +1318,135 @@
             firebaseInitialized = connected;
         }
 
-        // Basic modal functionality
+        // Utility Functions
         function showModal(modal) {
             modal.style.display = 'block';
         }
-        
+
         function hideModal(modal) {
             modal.style.display = 'none';
         }
-        
-        // Modal event listeners
-        document.getElementById('closeSpin').onclick = () => hideModal(spinModal);
-        document.getElementById('closeFollow').onclick = () => hideModal(followModal);
-        document.getElementById('closeTournament').onclick = () => hideModal(tournamentModal);
-        document.getElementById('closeWatch').onclick = () => hideModal(watchModal);
-        document.getElementById('closeWithdraw').onclick = () => hideModal(withdrawModal);
-        
-        // Card click handlers
-        watchEarnCard.onclick = () => showModal(watchModal);
-        followEarnCard.onclick = () => showModal(followModal);
-        spinWinCard.onclick = () => showModal(spinModal);
-        tournamentCard.onclick = () => showModal(tournamentModal);
-        withdrawBtn.onclick = () => showModal(withdrawModal);
-        
-        // Firebase configuration event listeners
-        toggleConfigBtn.onclick = toggleConfigForm;
-        saveConfigBtn.onclick = saveConfig;
-        testConnectionBtn.onclick = testConnection;
 
-        // Phone login toggle
-        phoneLoginBtn.onclick = () => {
-            if (!firebaseInitialized) {
-                alert('Please configure and test Firebase connection first');
-                return;
-            }
-            loginPage.classList.add('hidden');
-            phoneLoginForm.classList.remove('hidden');
-        };
-        
-        backToLoginBtn.onclick = () => {
-            phoneLoginForm.classList.add('hidden');
-            loginPage.classList.remove('hidden');
-        };
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: bold;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                background: ${type === 'success' ? '#00ff88' : type === 'error' ? '#ff4757' : '#00d4ff'};
+                color: ${type === 'success' || type === 'error' ? '#000' : '#fff'};
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
 
-        // Add Firebase check to login buttons
-        loginBtn.onclick = () => {
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function checkFirebaseConnection() {
             if (!firebaseInitialized) {
-                alert('Please configure and test Firebase connection first');
-                return;
+                showNotification('Please configure Firebase first', 'error');
+                return false;
             }
+            return true;
+        }
+
+        // Event Listeners
+        toggleConfigBtn.addEventListener('click', toggleConfigForm);
+        saveConfigBtn.addEventListener('click', saveConfig);
+        testConnectionBtn.addEventListener('click', testConnection);
+
+        // Login handlers
+        loginBtn.addEventListener('click', () => {
+            if (!checkFirebaseConnection()) return;
             // Firebase login logic would go here
-        };
-
-        signupBtn.onclick = () => {
-            if (!firebaseInitialized) {
-                alert('Please configure and test Firebase connection first');
-                return;
-            }
-            // Firebase signup logic would go here
-        };
-
-        googleLoginBtn.onclick = () => {
-            if (!firebaseInitialized) {
-                alert('Please configure and test Firebase connection first');
-                return;
-            }
-            // Firebase Google login logic would go here
-        };
-        
-        // Initialize Firebase configuration on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadSavedConfig();
+            showNotification('Login functionality ready for Firebase integration', 'info');
         });
 
-        // Show dashboard (for testing - remove when Firebase is integrated)
-        // dashboard.style.display = 'block';
-        // loginPage.style.display = 'none';
-        
-        // Export Firebase config for external use
+        signupBtn.addEventListener('click', () => {
+            if (!checkFirebaseConnection()) return;
+            // Firebase signup logic would go here
+            showNotification('Signup functionality ready for Firebase integration', 'info');
+        });
+
+        googleLoginBtn.addEventListener('click', () => {
+            if (!checkFirebaseConnection()) return;
+            // Firebase Google login logic would go here
+            showNotification('Google login functionality ready for Firebase integration', 'info');
+        });
+
+        phoneLoginBtn.addEventListener('click', () => {
+            if (!checkFirebaseConnection()) return;
+            loginScreen.classList.add('hidden');
+            phoneLoginForm.classList.remove('hidden');
+        });
+
+        backToLoginBtn.addEventListener('click', () => {
+            phoneLoginForm.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+        });
+
+        // Dashboard handlers
+        logoutBtn.addEventListener('click', () => {
+            dashboard.style.display = 'none';
+            loginScreen.style.display = 'flex';
+        });
+
+        // Earning card handlers
+        document.getElementById('watchEarnCard').addEventListener('click', () => showModal(watchModal));
+        document.getElementById('followEarnCard').addEventListener('click', () => showModal(followModal));
+        document.getElementById('spinWinCard').addEventListener('click', () => showModal(spinModal));
+        document.getElementById('tournamentCard').addEventListener('click', () => showModal(tournamentModal));
+        document.getElementById('withdrawBtn').addEventListener('click', () => showModal(withdrawModal));
+
+        // Modal close handlers
+        document.getElementById('closeSpin').addEventListener('click', () => hideModal(spinModal));
+        document.getElementById('closeFollow').addEventListener('click', () => hideModal(followModal));
+        document.getElementById('closeTournament').addEventListener('click', () => hideModal(tournamentModal));
+        document.getElementById('closeWatch').addEventListener('click', () => hideModal(watchModal));
+        document.getElementById('closeWithdraw').addEventListener('click', () => hideModal(withdrawModal));
+
+        // Copy referral code
+        document.getElementById('copyReferralBtn').addEventListener('click', () => {
+            const referralCode = document.getElementById('userReferralCode').textContent.trim();
+            navigator.clipboard.writeText(referralCode).then(() => {
+                showNotification('Referral code copied!', 'success');
+            });
+        });
+
+        // Bottom navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSavedConfig();
+            
+            // For demo purposes - remove when Firebase is integrated
+            // dashboard.style.display = 'block';
+            // loginScreen.style.display = 'none';
+        });
+
+        // Export functions for external use
         window.getFirebaseConfig = () => firebaseConfig;
         window.isFirebaseInitialized = () => firebaseInitialized;
-        
-        // All Firebase authentication and data management will be handled externally
-        // This HTML structure provides all necessary hooks and IDs for integration
+        window.showDashboard = () => {
+            loginScreen.style.display = 'none';
+            phoneLoginForm.classList.add('hidden');
+            dashboard.style.display = 'block';
+        };
     </script>
 </body>
 </html>
